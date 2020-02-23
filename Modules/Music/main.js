@@ -42,6 +42,7 @@ exports.YTMusicPlayer = class {
             this.voiceChannel = voiceChannel
             var connection = await voiceChannel.join().then(connection => {
                 console.log("Successfully connected to voice channel.");
+                return connection
               }).catch(e => {
                   throw e
               });
