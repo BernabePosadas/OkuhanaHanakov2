@@ -54,58 +54,58 @@ client.on('disconnect', () => {
 });
 
 client.on('message', async msg => {
-    try{
-    if (!msg.content.startsWith(prefix) || msg.author.bot) {
-        return;
+    try {
+        if (!msg.content.startsWith(prefix) || msg.author.bot) {
+            return;
+        }
+        else if (msg.author.id != parseInt(GlobalVariables.DiscordIDs.BernabeDiscordID) && maintenance) {
+            msg.reply("Sumimasen, Im currently on training with my master")
+        }
+        const args = msg.content.slice(prefix.length).split(/ +/)
+        const command = args.shift().toLowerCase();
+        switch (command) {
+            case "killmark":
+                if (validateAllowedShootingChannel(msg)) {
+                    await HanakoArrows.KillMark(msg)
+                }
+                break;
+            case "killmaster":
+                if (validateAllowedShootingChannel(msg)) {
+                    await HanakoArrows.KillBernabe(msg)
+                }
+                break;
+            case "killivan":
+                if (validateAllowedShootingChannel(msg)) {
+                    await HanakoArrows.KillIvan(msg)
+                }
+                break;
+            case "omakaseshot":
+                if (validateAllowedShootingChannel(msg)) {
+                    await HanakoArrows.ShootSomeoneRandomly(msg)
+                }
+                break;
+            case "play":
+                await YTPlayer.start(msg)
+                break;
+            case "skip":
+                YTPlayer.skip(msg)
+                break;
+            case "stop":
+                YTPlayer.stop(msg)
+                break
+            case "pause":
+                YTPlayer.pauseSong(msg)
+                break
+            case "resume":
+                YTPlayer.resume(msg)
+                break
+            default:
+                msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?")
+                break;
+        }
+    } catch (exception) {
+        ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception)
     }
-    else if (msg.author.id != parseInt(GlobalVariables.DiscordIDs.BernabeDiscordID) && maintenance) {
-        msg.reply("Sumimasen, Im currently on training with my master")
-    }
-    const args = msg.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
-    switch (command) {
-        case "killmark":
-            if (validateAllowedShootingChannel(msg)) {
-                await HanakoArrows.KillMark(msg)
-            }
-            break;
-        case "killmaster":
-            if (validateAllowedShootingChannel(msg)) {
-                await HanakoArrows.KillBernabe(msg)
-            }
-            break;
-        case "killivan":
-            if (validateAllowedShootingChannel(msg)) {
-                await HanakoArrows.KillIvan(msg)
-            }
-            break;
-        case "omakaseshot":
-            if (validateAllowedShootingChannel(msg)) {
-                await HanakoArrows.ShootSomeoneRandomly(msg)
-            }
-            break;
-        case "play":
-            await YTPlayer.start(msg)
-            break;
-        case "skip":
-            YTPlayer.skip(msg)
-            break;
-        case "stop":
-            YTPlayer.stop(msg)
-            break
-        case "pause":
-            YTPlayer.pauseSong(msg)
-            break
-        case "resume":
-            YTPlayer.resume(msg)
-            break 
-        default:
-            msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?")
-            break;
-    }
-  }catch(exception){
-       ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception)
-  }
 
 })
 
@@ -122,7 +122,7 @@ function validateAllowedShootingChannel(msg) {
 
 
 //region bot activity
-function setDefaultActivity(){
+function setDefaultActivity() {
     setActivity('with Okuhana Aiko', 'PLAYING')
 }
 

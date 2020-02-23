@@ -17,11 +17,16 @@ exports.YTMusicPlayer = class {
     async start(message) {
         var args = message.content.substring(6).toString().trim();
         const voiceChannel = message.member.voiceChannel;
-        if (!voiceChannel) message.reply("Ano.. you not on any voice channel. Please join a voice channel.");
+        if (!voiceChannel) {
+            message.reply("Ano.. you not on any voice channel. Please join a voice channel.");
+            return
+        }
         const permissions = voiceChannel.permissionsFor(message.client.user);
         if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
             message.reply('(>_<) I cant join your current voice channel. Please give permission (T⌓T)');
         }
+        console.log(args)
+        console.log(validator.isNotURL(args))
         if (validator.isNotURL(args)) {
             args = await YoutubeAPI.queryYoutube(args)
         }
@@ -66,8 +71,11 @@ exports.YTMusicPlayer = class {
     }
 
     stop(message) {
-        if (!message.member.voiceChannel) message.reply("Ano.. you not on any voice channel. Please join a voice channel to stop the music.");
-        if(!this.LastPlayed){
+        if (!message.member.voiceChannel) {
+            message.reply("Ano.. you not on any voice channel. Please join a voice channel to stop the music.");
+            return
+        }
+        else if(!this.LastPlayed){
             message.reply('Ano.. sumimasen, the queue list is empty')
             return
         }

@@ -4,6 +4,6 @@ exports.checkError = function(response){
     if (response.ok) { // res.status >= 200 && res.status < 300
         return response;
     } else {
-        throw `${url} responded HTTP ${response.status} ${response.statusText} \nResponse Body : ` + response.json()
+        throw `${url} responded HTTP ${response.status} ${response.statusText}`
     }
 }
