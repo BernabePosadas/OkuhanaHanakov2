@@ -25,12 +25,10 @@ exports.YTMusicPlayer = class {
         if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
             message.reply('(>_<) I cant join your current voice channel. Please give permission (T⌓T)');
         }
-        console.log(args)
-        console.log(validator.isNotURL(args))
         if (validator.isNotURL(args)) {
             args = await YoutubeAPI.queryYoutube(args)
         }
-        const songInfo = await ytdl.getInfo(args);
+        var songInfo = await ytdl.getInfo(args);
         const song = {
             title: songInfo.title,
             url: songInfo.video_url,
@@ -42,7 +40,11 @@ exports.YTMusicPlayer = class {
         if (!this.LastPlayed) {
             this.LastPlayed = new QueueList(null, song)
             this.voiceChannel = voiceChannel
-            var connection = await voiceChannel.join()
+            var connection = await voiceChannel.join().then(connection => {
+                console.log("Successfully connected to voice channel.");
+              }).catch(e => {
+                  throw e
+              });
             this.connection = connection;
             await this.play(message);
         } else {

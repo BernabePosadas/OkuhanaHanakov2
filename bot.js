@@ -130,4 +130,5 @@ function setActivity(display, activity_type) {
     client.user.setActivity(display, { type: activity_type })
 }
 //endregion
+
 client.login(process.env.token)
