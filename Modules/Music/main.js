@@ -28,7 +28,10 @@ exports.YTMusicPlayer = class {
         if (validator.isNotURL(args)) {
             args = await YoutubeAPI.queryYoutube(args)
         }
-        var songInfo = await ytdl.getInfo(args);
+        var songInfo = await ytdl.getInfo(args, (err, info) => {
+            if (err) throw err
+            return info
+        })
         const song = {
             title: songInfo.title,
             url: songInfo.video_url,
