@@ -134,7 +134,7 @@ exports.YTMusicPlayer = class {
         await message.channel.send(songInfoBanner).then(msg => {
             this.LastPlayed.song_data.message_to_delete = msg
         })
-        this.connection.playStream(await ytdl(this.LastPlayed.song_data.url, { filter : 'audioonly' }), {bitrate : "auto", passes : 3})
+        this.connection.playStream(await ytdl(this.LastPlayed.song_data.url, { filter : 'audioonly' }), {bitrate : "auto", passes : 1})
             .on('end', async () => {
                 console.log('Music ended!');
                 if (this.LastPlayed.next) {

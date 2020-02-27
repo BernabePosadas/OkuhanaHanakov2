@@ -6,6 +6,7 @@ const DanbooruImageRandomizer = require('./Modules/DanbooruImageRandomizer/main'
 const MusicPlayer = require('./Modules/Music/main')
 const GlobalVariables = require('./GlobalVariables/GlobalVariables')
 const ErrorReporter = require('./Modules/ExceptionHandling/ErrorReporter')
+const nHentai = require('./Modules/nHentaiDetailViewer/main') 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
@@ -15,10 +16,11 @@ if (process.env.NODE_ENV !== 'production') {
 const client = new Discord.Client()
 const BotExceptionLogChannel = "680613824579371239"   // ID to our  bot exception log channel 
 const prefix = "!"
-const maintenance = true;
+const maintenance = false;
 const pixiv = new PixivApi()
 var HanakoArrows = null
 var YTPlayer = null
+var nHentaiDoujinViewer = null
 //endregion
 
 
@@ -32,6 +34,7 @@ client.on('ready', () => {
     ]
     HanakoArrows = new DanbooruImageRandomizer.HanakoArrows(client, Decks)
     YTPlayer = new MusicPlayer.YTMusicPlayer()
+    nHentaiDoujinViewer = new nHentai.nHentaiViewer()
     /* pixiv basic search 
     const word = 'クレセント(アズールレーン)';
     var returnobj = pixiv.login('user_tupx2577', process.env.PixivPassword).then(() => {
@@ -98,6 +101,9 @@ client.on('message', async msg => {
                 break
             case "resume":
                 YTPlayer.resume(msg)
+                break
+            case "launchnuke":
+                await nHentaiDoujinViewer.displayDoujinInfo(msg)
                 break
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?")
