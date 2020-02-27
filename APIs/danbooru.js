@@ -14,6 +14,6 @@ exports.RandomShoot = async function(candidate){
 
 
 async function Request_GET_posts(query){
-    const response = await fetch(`https://safebooru.donmai.us/posts.json?${query}`).then(ErrorChecker.checkError).then(response => response.json());
-    return `https://safebooru.donmai.us/posts/${response[0].id}`;
+    const response = await fetch(`https://danbooru.donmai.us/posts.json?${query}`).then(ErrorChecker.checkError).then(response => response.json());
+    return `https://danbooru.donmai.us/posts/${response[0].id}`;
 }
