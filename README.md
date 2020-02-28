@@ -1,4 +1,5 @@
 # Okuhana Hanako
+[![Build status](https://ci.appveyor.com/api/projects/status/5rmvkqj84j6ml5xs/branch/master?svg=true)](https://ci.appveyor.com/project/BernabePosadas/okuhanahanakov2/branch/master)
 
 A Discord Bot that i created for practicing coding in node and discord js API. 
 
@@ -21,7 +22,8 @@ A Discord Bot that i created for practicing coding in node and discord js API.
     - `!pause` - pause the currently playing song
     - `!resume` - resume the paused song
     - `!stop` - stops the player and remove all items in queue
-
+3) Misc commands
+   - `!launchnuke <code>` - will display nHentai doujin basic information when given a nHenati doujin ID(or weebs call it nuke codes)  
 ## What is my motivation to create this? 
   To gave myself an excercise to code and to automate fetching `abigail williams` photo to be sent to Mark. 
 
