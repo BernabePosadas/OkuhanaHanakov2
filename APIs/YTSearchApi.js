@@ -1,6 +1,6 @@
-const fetch = require('node-fetch');
-const querystring = require('querystring');
-const ErrorChecker = require('./ErrorChecker')
+const fetch = require("node-fetch");
+const querystring = require("querystring");
+const ErrorChecker = require("./ErrorChecker");
 
 exports.queryYoutube = async function (args) {
     const query = querystring.stringify({
@@ -9,7 +9,7 @@ exports.queryYoutube = async function (args) {
         q: args,
         type: "video"
     })
-    return await SearchAndGenerateURL(query)
+    return await SearchAndGenerateURL(query);
 }
 async function SearchAndGenerateURL(query) {
     const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${query}`).then(ErrorChecker.checkError).then(response => response.json());

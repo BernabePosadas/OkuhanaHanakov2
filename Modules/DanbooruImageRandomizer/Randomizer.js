@@ -1,18 +1,18 @@
 exports.RandomGet = function (deck){
-    candidates = shuffle(deck)
+    candidates = shuffle(deck);
     return candidates[Math.floor(Math.random() * candidates.length)];
      
 }
 exports.RandomSurpriseShoot= function(){
-  var results = ["mark", "ivan", "me", "all"]
-  results = shuffle(results)
-  return results[Math.floor(Math.random() * 3)]
+  var results = ["mark", "ivan", "me", "all"];
+  results = shuffle(results);
+  return results[Math.floor(Math.random() * 3)];
 }
 
 exports.RandomSpeechReplies = function(){
-  var result = ["ehehe (^-^) mitsuketta. \n> ***shoots arrow***", "surprise ehehe. \n> ***shoots arrow***", "Ta-da, \n> ***shoots arrow***", "touh! \n> ***shoots arrow***", "yah! \n> ***shoots arrow***", "ehehe \n> ***shoots arrow***"]
-  result = shuffle(result) 
-  return result[Math.floor(Math.random() * 5)]
+  var result = ["ehehe (^-^) mitsuketta. \n> ***shoots arrow***", "surprise ehehe. \n> ***shoots arrow***", "Ta-da, \n> ***shoots arrow***", "touh! \n> ***shoots arrow***", "yah! \n> ***shoots arrow***", "ehehe \n> ***shoots arrow***"];
+  result = shuffle(result);
+  return result[Math.floor(Math.random() * 5)];
 }
 
 // from :  https://github.com/coolaj86/knuth-shuffle

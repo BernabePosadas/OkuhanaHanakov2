@@ -3,17 +3,17 @@
 class QueueList {
     previous = null; // previous data
     next = null;  // next data
-    song_data = null // song data
+    song_data = null; // song data
     constructor(previous, data) {
-        this.previous = previous
-        this.song_data = data
+        this.previous = previous;
+        this.song_data = data;
     }
     setNextQueue(data){
         if(!this.next){
-            this.next = new QueueList(this, data)
-            return
+            this.next = new QueueList(this, data);
+            return;
         }
-        this.next.setNextQueue(data)
+        this.next.setNextQueue(data);
     }
 }
 
