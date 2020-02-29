@@ -1,6 +1,7 @@
 # Okuhana Hanako
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b75ff93fa7e4846a80e0dd96e08492f)](https://app.codacy.com/manual/BernabePosadas/OkuhanaHanakov2?utm_source=github.com&utm_medium=referral&utm_content=BernabePosadas/OkuhanaHanakov2&utm_campaign=Badge_Grade_Dashboard)
 [![Build status](https://ci.appveyor.com/api/projects/status/5rmvkqj84j6ml5xs/branch/master?svg=true)](https://ci.appveyor.com/project/BernabePosadas/okuhanahanakov2/branch/master)
+[![GitHub license](https://img.shields.io/github/license/BernabePosadas/OkuhanaHanakov2)](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/master/LICENSE)
 
 A Discord Bot that i created for practicing coding in node and discord js API. 
 
