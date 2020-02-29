@@ -7,9 +7,6 @@ const MusicPlayer = require('./Modules/Music/main')
 const GlobalVariables = require('./GlobalVariables/GlobalVariables')
 const ErrorReporter = require('./Modules/ExceptionHandling/ErrorReporter')
 const nHentai = require('./Modules/nHentaiDetailViewer/main') 
-const exp = require("express");
-const logger = require("morgan");
-const app = exp();
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
@@ -24,13 +21,9 @@ const pixiv = new PixivApi()
 var HanakoArrows = null
 var YTPlayer = null
 var nHentaiDoujinViewer = null
-const port = process.env.PORT || 3000;
 //endregion
 
-//region configs 
-app.use(logger("combined"));
-app.use(exp.static('public'));
-//endregion
+
 
 //region bot function area
 client.on('ready', () => {
@@ -149,9 +142,3 @@ function setActivity(display, activity_type) {
 client.login(process.env.token);
 //endregion 
 
-//region HTTP request route area 
-app.get("/", (req, res) => {
-    return res.status(200).sendFile(__dirname + "/pages/main.htm");
-})
-app.listen(port);
-//endregion
