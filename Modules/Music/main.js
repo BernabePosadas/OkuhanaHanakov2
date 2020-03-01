@@ -19,11 +19,12 @@ exports.YTMusicPlayer = class {
         const voiceChannel = message.member.voiceChannel;
         if (!voiceChannel) {
             message.reply("Ano.. you not on any voice channel. Please join a voice channel.");
-            return
+            return;
         }
         const permissions = voiceChannel.permissionsFor(message.client.user);
         if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
             message.reply("(>_<) I cant join your current voice channel. Please give permission (T⌓T)");
+            return;
         }
         if (validator.isNotURL(args)) {
             args = await YoutubeAPI.queryYoutube(args);
@@ -70,7 +71,12 @@ exports.YTMusicPlayer = class {
         if (!this.LastPlayed) {
             message.reply("Ano.. sumimasen, there no song I can skip right now. please check if there is a song in queue");
         }
-        this.connection.dispatcher.end();
+        if(this.connection.dispatcher){
+            this.connection.dispatcher.end();
+        }
+        else{
+            this.LastPlayed = this.LastPlayed.next;
+        }
     }
 
     stop(message) {
