@@ -7,6 +7,7 @@ const MusicPlayer = require("./Modules/Music/main");
 const GlobalVariables = require("./GlobalVariables/GlobalVariables");
 const ErrorReporter = require("./Modules/ExceptionHandling/ErrorReporter");
 const nHentai = require("./Modules/nHentaiDetailViewer/main");
+const serverQueueList = new Map();
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
@@ -35,7 +36,6 @@ client.on("ready", () => {
         ArrowGenerator.createIvanDeck()
     ]
     HanakoArrows = new DanbooruImageRandomizer.HanakoArrows(client, Decks);
-    YTPlayer = new MusicPlayer.YTMusicPlayer();
     nHentaiDoujinViewer = new nHentai.nHentaiViewer();
     /* pixiv basic search 
     const word = "クレセント(アズールレーン)";
@@ -90,18 +90,23 @@ client.on("message", async msg => {
                 }
                 break;
             case "play":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
                 await YTPlayer.start(msg);
                 break;
             case "skip":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
                 YTPlayer.skip(msg);
                 break;
             case "stop":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
                 YTPlayer.stop(msg);
                 break;
             case "pause":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
                 YTPlayer.pauseSong(msg);
                 break;
             case "resume":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
                 YTPlayer.resume(msg);
                 break;
             case "launchnuke":
@@ -127,8 +132,14 @@ function validateAllowedShootingChannel(msg) {
 }
 //endregion
 
-
-
+//region function area 
+function getYTPlayerInstance(id){
+    if(!serverQueueList.get(id)){
+        serverQueueList.set(id, new MusicPlayer.YTMusicPlayer());
+    }
+    return serverQueueList.get(id);
+}
+//endregion
 //region bot activity
 function setDefaultActivity() {
     setActivity("with Okuhana Aiko", "PLAYING");
@@ -141,4 +152,5 @@ function setActivity(display, activity_type) {
 
 client.login(process.env.token);
 //endregion 
+
 
