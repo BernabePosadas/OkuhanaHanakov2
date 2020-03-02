@@ -5,6 +5,15 @@ const { QueueList } = require("./QueueList");
 var YoutubeAPI = require("./../../APIs/YTSearchApi");
 
 exports.YTMusicPlayer = class {
+    constructor() {
+        this.reset();
+    }
+    reset() {
+        this.LastPlayed = null;
+        this.voiceChannel = null;
+        this.paused = false;
+        this.connection = null;
+    }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
         const voiceChannel = message.member.voiceChannel;
@@ -42,7 +51,7 @@ exports.YTMusicPlayer = class {
             await this.play(message);
         } else {
             if (this.voiceChannel === voiceChannel) {
-                song.onQueue = true;
+                song.onQueue = true
                 var songInfoBanner = new Discord.RichEmbed()
                     .setColor("#000000")
                     .setTitle("Queued")
@@ -53,9 +62,8 @@ exports.YTMusicPlayer = class {
                     song.onQueue = true;
                 });
                 this.LastPlayed.setNextQueue(song);
-            }
-            else{
-                message.reply("Sumimasen, i cant join 2 different voice channel at once.");
+            } else {
+                message.reply("Sumimasen, i cant join 2 different voice channel at once");
             }
         }
     }
@@ -154,7 +162,16 @@ exports.YTMusicPlayer = class {
                     throw error;
                 });
         } catch (err) {
+            this.LastPlayed.song_data.message_to_delete.delete();
+            this.voiceChannel.leave();
+            this.reset();
             throw err;
+        }
+    }
+    removeQueueLogs() {
+        while (this.LastPlayed.next) {
+            this.LastPlayed = this.LastPlayed.next;
+            this.LastPlayed.song_data.on_queue_message.delete();
         }
     }
 }
