@@ -13,7 +13,7 @@ exports.YTMusicPlayer = class {
         this.voiceChannel = null;
         this.paused = false;
         this.connection = null;
-        this.repeat = true;
+        this.repeat = false;
     }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
