@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== "production") {
 
 //region attributes
 const client = new Discord.Client();
-const BotExceptionLogChannel = "680613824579371239";   // ID to our  bot exception log channel 
+const BotExceptionLogChannel = "684382771069845598";   // ID to our  bot exception log channel 
 const prefix = "!";
 const maintenance = false;
 const pixiv = new PixivApi();
