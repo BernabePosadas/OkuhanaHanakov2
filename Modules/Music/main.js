@@ -13,6 +13,7 @@ exports.YTMusicPlayer = class {
         this.voiceChannel = null;
         this.paused = false;
         this.connection = null;
+        this.repeat = true;
     }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
@@ -92,6 +93,7 @@ exports.YTMusicPlayer = class {
             message.reply("Ano.. sumimasen, the queue list is empty");
             return
         }
+        this.repeat = false;
         this.connection.dispatcher.end();
         this.reset();
     }
@@ -116,14 +118,7 @@ exports.YTMusicPlayer = class {
     resume(message) {
         if (this.paused && this.LastPlayed) {
             this.LastPlayed.song_data.message_to_delete.delete();
-            var songInfoBanner = new Discord.RichEmbed()
-                .setColor("#0099FF")
-                .setTitle("Now Playing")
-                .setImage(this.LastPlayed.song_data.thumbnail)
-                .addField(`[${this.LastPlayed.song_data.title}]`, `[View on YouTube](${this.LastPlayed.song_data.url})`, true);
-            message.channel.send(songInfoBanner).then(msg => {
-                this.LastPlayed.song_data.message_to_delete = msg;
-            })
+            this.setNowPlayingTitle(message);
             this.connection.dispatcher.resume();
             this.paused = false;
         }
@@ -131,24 +126,36 @@ exports.YTMusicPlayer = class {
             message.reply("Ano.. sumimasen, there no song I can resume right now. please check if there is a paused song");
         }
     }
+    setRepeat(message) {
+        if (this.repeat && this.LastPlayed) {
+            this.repeat = false;
+            this.LastPlayed.song_data.message_to_delete.delete();
+            this.setNowPlayingTitle(message);
+            return;
+        }
+        else if (!this.LastPlayed) {
+            message.reply("Sumimasen, there is no song that I can set to repeat");
+            return;
+        }
+        this.repeat = true;
+        this.LastPlayed.song_data.message_to_delete.delete();
+        this.setNowPlayingTitle(message);
+    }
     async play(message) {
         try {
             if (this.LastPlayed.song_data.onQueue) {
                 this.LastPlayed.song_data.on_queue_message.delete();
             }
-            var songInfoBanner = new Discord.RichEmbed()
-                .setColor("#0099FF")
-                .setTitle("Now Playing")
-                .setImage(this.LastPlayed.song_data.thumbnail)
-                .addField(`[${this.LastPlayed.song_data.title}]`, `[View on YouTube](${this.LastPlayed.song_data.url})`, true);
-            await message.channel.send(songInfoBanner).then(msg => {
-                this.LastPlayed.song_data.message_to_delete = msg;
-            })
+            this.setNowPlayingTitle(message);
             this.connection.playStream(await ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto", passes: 2 })
                 .on("end", async () => {
                     console.log("Music ended!");
-                    if (this.LastPlayed.next) {
-                        this.LastPlayed.song_data.message_to_delete.delete();
+                    this.LastPlayed.song_data.message_to_delete.delete();
+                    if (this.repeat) {
+                        await this.play(message);
+                    }
+                    else if (this.LastPlayed.next) {
+
                         this.LastPlayed = this.LastPlayed.next;
                         await this.play(message);
                     }
@@ -173,6 +180,20 @@ exports.YTMusicPlayer = class {
             this.LastPlayed = this.LastPlayed.next;
             this.LastPlayed.song_data.on_queue_message.delete();
         }
+    }
+    setNowPlayingTitle(message) {
+        var repeated = "";
+        if (this.repeat) {
+            repeated = "(repeat on)";
+        }
+        var songInfoBanner = new Discord.RichEmbed()
+            .setColor("#0099FF")
+            .setTitle("Now Playing " + repeated)
+            .setImage(this.LastPlayed.song_data.thumbnail)
+            .addField(`[${this.LastPlayed.song_data.title}]`, `[View on YouTube](${this.LastPlayed.song_data.url})`, true);
+        message.channel.send(songInfoBanner).then(msg => {
+            this.LastPlayed.song_data.message_to_delete = msg;
+        })
     }
 }
 

@@ -112,6 +112,10 @@ client.on("message", async msg => {
             case "launchnuke":
                 await nHentaiDoujinViewer.displayDoujinInfo(msg)
                 break;
+            case "togglerepeat":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
+                YTPlayer.setRepeat(msg);
+                break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
                 break;
