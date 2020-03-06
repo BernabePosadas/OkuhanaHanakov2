@@ -152,12 +152,11 @@ exports.YTMusicPlayer = class {
                     console.log("Music ended!");
                     this.LastPlayed.song_data.message_to_delete.delete();
                     if (this.repeat) {
-                        await this.play(message);
+                        this.play(message);
                     }
                     else if (this.LastPlayed.next) {
-
                         this.LastPlayed = this.LastPlayed.next;
-                        await this.play(message);
+                        this.play(message);
                     }
                     else {
                         this.LastPlayed.song_data.message_to_delete.delete();
@@ -182,7 +181,7 @@ exports.YTMusicPlayer = class {
         }
     }
     setNowPlayingTitle(message) {
-        var repeated = "";
+        var repeated = "(repeat off)";
         if (this.repeat) {
             repeated = "(repeat on)";
         }
