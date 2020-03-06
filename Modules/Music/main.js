@@ -49,7 +49,7 @@ exports.YTMusicPlayer = class {
                 throw e
             });
             this.connection = connection;
-            await this.play(message);
+            this.play(message);
         } else {
             if (this.voiceChannel === voiceChannel) {
                 song.onQueue = true
@@ -141,13 +141,13 @@ exports.YTMusicPlayer = class {
         this.LastPlayed.song_data.message_to_delete.delete();
         this.setNowPlayingTitle(message);
     }
-    async play(message) {
+    play(message) {
         try {
             if (this.LastPlayed.song_data.onQueue) {
                 this.LastPlayed.song_data.on_queue_message.delete();
             }
             this.setNowPlayingTitle(message);
-            this.connection.playStream(await ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto", passes: 2 })
+            this.connection.playStream(ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto", passes: 2 })
                 .on("end", async () => {
                     console.log("Music ended!");
                     this.LastPlayed.song_data.message_to_delete.delete();
