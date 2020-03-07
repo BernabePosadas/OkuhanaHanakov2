@@ -1,7 +1,8 @@
 exports.checkError = function(response){
     var queryStringLocation = response.url.indexOf("?");
     var url =response.url;
-    if(queryStringLocation != 0){
+    console.log(queryStringLocation);
+    if(queryStringLocation > 0){
         url = response.url.substring(0, queryStringLocation);   // removes queryString.
     }
     if (response.ok) { // res.status >= 200 && res.status < 300

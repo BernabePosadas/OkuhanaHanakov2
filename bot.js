@@ -128,8 +128,12 @@ client.on("message", async msg => {
 
 //region validations
 function validateAllowedShootingChannel(msg) {
-    if (msg.channel.id != 677361288246198292 && msg.channel.id != 677361065327067136) {
+    if (msg.channel.id != 677361288246198292 && msg.channel.id != 677361065327067136 && msg.guild.id === 677136815894822922) {
         msg.reply("Ano.. sumimasen, I cant shoot someone from this channel please go to <#677361288246198292>. Thank you. ");
+        return false;
+    }
+    else if (msg.guild.id != 677136815894822922){
+        msg.reply("Ano.. sumimasen, The command you requested is only available to the weeb server master created.");
         return false;
     }
     return true;
