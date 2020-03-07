@@ -91,7 +91,7 @@ client.on("message", async msg => {
                 break;
             case "play":
                 YTPlayer = getYTPlayerInstance(msg.guild.id);
-                await YTPlayer.start(msg);
+                YTPlayer.start(msg);
                 break;
             case "skip":
                 YTPlayer = getYTPlayerInstance(msg.guild.id);
