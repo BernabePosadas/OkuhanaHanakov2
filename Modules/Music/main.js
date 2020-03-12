@@ -14,6 +14,7 @@ exports.YTMusicPlayer = class {
         this.paused = false;
         this.connection = null;
         this.repeat = false;
+        this.playing = false;
     }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
@@ -49,9 +50,10 @@ exports.YTMusicPlayer = class {
                 throw e
             });
             this.connection = connection;
-            this.play(message);
+            this.playing = true;
+            this.startPlaying();
         } else {
-            if (this.voiceChannel === voiceChannel) {
+            if (this.validateSameVoiceChannel(voiceChannel)) {
                 song.onQueue = true
                 var songInfoBanner = new Discord.RichEmbed()
                     .setColor("#000000")
@@ -68,62 +70,80 @@ exports.YTMusicPlayer = class {
             }
         }
     }
-
+    async startPlaying(message) {
+        while (this.playing) {
+            await this.play(message);
+        }
+    }
     skip(message) {
-        if (!message.member.voiceChannel) {
-            message.reply("Ano.. you not on any voice channel. Please join a voice channel to skip the music.");
+        if (!this.validatePlayerControlFunction) {
+            return
         }
-        if (!this.LastPlayed) {
-            message.reply("Ano.. sumimasen, there no song I can skip right now. please check if there is a song in queue");
-        }
-        if (this.connection.dispatcher) {
-            this.connection.dispatcher.end();
+        if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
+            this.LastPlayed = this.LastPlayed.next;
+            if (this.connection.dispatcher) {
+                this.connection.dispatcher.end();
+            }
         }
         else {
-            this.LastPlayed = this.LastPlayed.next;
+            message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently playing music. Please go to that voice channel and request again. Thank you (^-^)");
         }
     }
 
     stop(message) {
-        if (!message.member.voiceChannel) {
-            message.reply("Ano.. you not on any voice channel. Please join a voice channel to stop the music.");
+        if (!this.validatePlayerControlFunction) {
             return
         }
-        else if (!this.LastPlayed) {
-            message.reply("Ano.. sumimasen, the queue list is empty");
-            return
-        }
-        this.repeat = false;
-        this.connection.dispatcher.end();
-        this.reset();
-    }
-    pauseSong(message) {
-        if (!(this.paused) && this.LastPlayed) {
-            this.LastPlayed.song_data.message_to_delete.delete();
-            var songInfoBanner = new Discord.RichEmbed()
-                .setColor("#0099FF")
-                .setTitle("Paused")
-                .setImage(this.LastPlayed.song_data.thumbnail)
-                .addField(`[${this.LastPlayed.song_data.title}]`, `[View on YouTube](${this.LastPlayed.song_data.url})`, true);
-            message.channel.send(songInfoBanner).then(msg => {
-                this.LastPlayed.song_data.message_to_delete = msg;
-            })
-            this.connection.dispatcher.pause();
-            this.paused = true;
+        if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
+            this.repeat = false;
+            this.connection.dispatcher.end();
+            this.reset();
         }
         else {
-            message.reply("Ano.. sumimasen, there no song I can pause right now. please check if there is a song in playing to pause");
+            message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently playing music. Please go to that voice channel and request again. Thank you (^-^)");
+        }
+    }
+    pauseSong(message) {
+        if (!this.validatePlayerControlFunction) {
+            return
+        }
+        if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
+            if (!(this.paused) && this.LastPlayed) {
+                this.LastPlayed.song_data.message_to_delete.delete();
+                var songInfoBanner = new Discord.RichEmbed()
+                    .setColor("#0099FF")
+                    .setTitle("Paused")
+                    .setImage(this.LastPlayed.song_data.thumbnail)
+                    .addField(`[${this.LastPlayed.song_data.title}]`, `[View on YouTube](${this.LastPlayed.song_data.url})`, true);
+                message.channel.send(songInfoBanner).then(msg => {
+                    this.LastPlayed.song_data.message_to_delete = msg;
+                })
+                this.connection.dispatcher.pause();
+                this.paused = true;
+            }
+            else {
+                message.reply("Ano.. sumimasen, there no song I can pause right now. please check if there is a song in playing to pause");
+            }
+        } else {
+            message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently playing music. Please go to that voice channel and request again. Thank you (^-^)");
         }
     }
     resume(message) {
-        if (this.paused && this.LastPlayed) {
-            this.LastPlayed.song_data.message_to_delete.delete();
-            this.setNowPlayingTitle(message);
-            this.connection.dispatcher.resume();
-            this.paused = false;
+        if (!this.validatePlayerControlFunction) {
+            return
         }
-        else {
-            message.reply("Ano.. sumimasen, there no song I can resume right now. please check if there is a paused song");
+        if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
+            if (this.paused && this.LastPlayed) {
+                this.LastPlayed.song_data.message_to_delete.delete();
+                this.setNowPlayingTitle(message);
+                this.connection.dispatcher.resume();
+                this.paused = false;
+            }
+            else {
+                message.reply("Ano.. sumimasen, there no song I can resume right now. please check if there is a paused song");
+            }
+        } else {
+            message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently joined. Please go to that voice channel and request again. Thank you (^-^)");
         }
     }
     setRepeat(message) {
@@ -141,44 +161,52 @@ exports.YTMusicPlayer = class {
         this.LastPlayed.song_data.message_to_delete.delete();
         this.setNowPlayingTitle(message);
     }
-    play(message) {
+    async play(message) {
         try {
             if (this.LastPlayed.song_data.onQueue) {
                 this.LastPlayed.song_data.on_queue_message.delete();
             }
             this.setNowPlayingTitle(message);
-            this.connection.playStream(ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto", passes: 2 })
+            this.connection.playStream(await ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto" })
                 .on("end", async () => {
                     console.log("Music ended!");
                     this.LastPlayed.song_data.message_to_delete.delete();
-                    if (this.repeat) {
-                        this.play(message);
+                    if (!this.repeat) {
+                        if (this.LastPlayed.next) {
+                            this.LastPlayed = this.LastPlayed.next;
+                        }
+                        else {
+                            this.endPlayer();
+                        }
                     }
-                    else if (this.LastPlayed.next) {
-                        this.LastPlayed = this.LastPlayed.next;
-                        this.play(message);
-                    }
-                    else {
-                        this.LastPlayed.song_data.message_to_delete.delete();
-                        this.voiceChannel.leave();
-                        this.reset();
+                    if (!this.LastPlayed.next) {
+                        this.endPlayer();
                     }
                 })
                 .on("error", error => {
                     throw error;
                 });
         } catch (err) {
-            this.LastPlayed.song_data.message_to_delete.delete();
-            this.voiceChannel.leave();
-            this.reset();
+            this.endPlayer();
             throw err;
         }
+    }
+    endPlayer() {
+        this.LastPlayed.song_data.message_to_delete.delete();
+        this.voiceChannel.leave();
+        this.reset();
     }
     removeQueueLogs() {
         while (this.LastPlayed.next) {
             this.LastPlayed = this.LastPlayed.next;
             this.LastPlayed.song_data.on_queue_message.delete();
         }
+    }
+    validateSameVoiceChannel(voiceChannel) {
+        if (this.voiceChannel === voiceChannel) {
+            return true;
+        }
+        return false;
     }
     setNowPlayingTitle(message) {
         var repeated = "(repeat off)";
@@ -193,6 +221,18 @@ exports.YTMusicPlayer = class {
         message.channel.send(songInfoBanner).then(msg => {
             this.LastPlayed.song_data.message_to_delete = msg;
         })
+    }
+    validatePlayerControlFunction(message) {
+        if (!message.member.voiceChannel) {
+            message.reply("Ano.. you not on any voice channel. Please join a voice channel to stop the music.");
+            return false;
+        }
+        if (!this.LastPlayed) {
+            message.reply("Ano.. sumimasen, the queue list is empty");
+            return false;
+        }
+        return true;
+
     }
 }
 

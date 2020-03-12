@@ -110,17 +110,23 @@ client.on("message", async msg => {
                 YTPlayer.resume(msg);
                 break;
             case "launchnuke":
-                await nHentaiDoujinViewer.displayDoujinInfo(msg)
+                if (validateIfR18Channel(msg)) {
+                    await nHentaiDoujinViewer.displayDoujinInfo(msg);
+                }
                 break;
             case "togglerepeat":
                 YTPlayer = getYTPlayerInstance(msg.guild.id);
                 YTPlayer.setRepeat(msg);
+                break;
+            case "help":
+                viewAvailCommands(msg);
                 break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
                 break;
         }
     } catch (exception) {
+        msg.reply("Sumimasen, Sumimasen. I'm unable to perform your requested command. I let my master know what is wrong. Please forgive me (T⌓T).");
         ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception);
     }
 
@@ -128,29 +134,57 @@ client.on("message", async msg => {
 
 //region validations
 function validateAllowedShootingChannel(msg) {
-    if (msg.channel.id != 677361288246198292 && msg.channel.id != 677361065327067136 && msg.guild.id === 677136815894822922) {
+    if (msg.channel.id != 677361288246198292 && msg.channel.id != 677361065327067136 && msg.guild.id === "677136815894822922") {
         msg.reply("Ano.. sumimasen, I cant shoot someone from this channel please go to <#677361288246198292>. Thank you. ");
         return false;
     }
-    else if (msg.guild.id != 677136815894822922){
+    else if (msg.guild.id != 677136815894822922) {
         msg.reply("Ano.. sumimasen, The command you requested is only available to the weeb server master created.");
         return false;
     }
     return true;
 }
+function validateIfR18Channel(msg) {
+    if (msg.channel.nsfw) {
+        return true;
+    }
+    msg.reply("Sumimasen. I cant serve R18 connect on SFW channels. Please go to any NSFW marked text channel and request again. Thank you (^-^).");
+    return false;
+}
 //endregion
 
 //region function area 
-function getYTPlayerInstance(id){
-    if(!serverQueueList.get(id)){
+function getYTPlayerInstance(id) {
+    if (!serverQueueList.get(id)) {
         serverQueueList.set(id, new MusicPlayer.YTMusicPlayer());
     }
     return serverQueueList.get(id);
+}
+function viewAvailCommands(msg) {
+    var TheGulagAdditionalCommands = "";
+    var HelpBanner = new Discord.RichEmbed()
+        .setColor("#0055ff")
+        .setTitle("Okuhana Hanako")
+        .setDescription(`A Discord Bot that my master [Bernabe Posadas Jr.](https://github.com/BernabePosadas) created for practicing coding in node and exploring discord js API.`);
+    msg.channel.send(HelpBanner);
+    if (msg.guild.id === "677136815894822922") {
+        createMyCapabilities("Danbooru/Safebooru Random Image Fetcher", `\`!killmark\` shoots <@${GlobalVariables.DiscordIDs.MarkDiscordID}>\n \`!killivan\` shoots <@${GlobalVariables.DiscordIDs.IvanDiscordID}>\n \`!killmaster\` shoots <@${GlobalVariables.DiscordIDs.BernabeDiscordID}>`, msg);
+    }
+    createMyCapabilities("YouTube Music Player", `\`!play <title>\` plays a song from YouTube. Alternatively you can put the URL on \`<title>\`\n\`!skip\` skips a song\n\`!stop\` stop and wipes all song in queue\n\`!pause\` pause the current song\n\`!resume\` resume paused song\n\`!togglerepeat\` toggles current song repeat status`, msg);
+    createMyCapabilities("Nutaku Nuke Launcher", `\`!launchnuke <code>\` finds a nutaku doujin with the id \`<code>\``, msg);
+}
+function createMyCapabilities(header, content, msg){
+    HelpBanner = new Discord.RichEmbed()
+    .setColor("#0055ff")
+    .setTitle("My Capabilities")
+    .addField(header, content, true)
+    msg.channel.send(HelpBanner);
 }
 //endregion
 //region bot activity
 function setDefaultActivity() {
     setActivity("with Okuhana Aiko", "PLAYING");
+
 }
 
 function setActivity(display, activity_type) {
@@ -159,6 +193,6 @@ function setActivity(display, activity_type) {
 //endregion
 
 client.login(process.env.token);
-//endregion 
+//endregion
 
 
