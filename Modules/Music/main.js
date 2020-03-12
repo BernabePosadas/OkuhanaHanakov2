@@ -14,7 +14,7 @@ exports.YTMusicPlayer = class {
         this.paused = false;
         this.connection = null;
         this.repeat = false;
-        this.playing = false;
+        this.skipSong = false;
     }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
@@ -50,8 +50,7 @@ exports.YTMusicPlayer = class {
                 throw e
             });
             this.connection = connection;
-            this.playing = true;
-            this.startPlaying();
+            this.play(message);
         } else {
             if (this.validateSameVoiceChannel(voiceChannel)) {
                 song.onQueue = true
@@ -70,19 +69,16 @@ exports.YTMusicPlayer = class {
             }
         }
     }
-    async startPlaying(message) {
-        while (this.playing) {
-            await this.play(message);
-        }
-    }
     skip(message) {
-        if (!this.validatePlayerControlFunction) {
+        if (!this.validatePlayerControlFunction(message)) {
             return
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
-            this.LastPlayed = this.LastPlayed.next;
+            this.skipSong = true;
             if (this.connection.dispatcher) {
                 this.connection.dispatcher.end();
+            } else {
+                this.LastPlayed = this.LastPlayed.next;
             }
         }
         else {
@@ -91,7 +87,7 @@ exports.YTMusicPlayer = class {
     }
 
     stop(message) {
-        if (!this.validatePlayerControlFunction) {
+        if (!this.validatePlayerControlFunction(message)) {
             return
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
@@ -104,7 +100,7 @@ exports.YTMusicPlayer = class {
         }
     }
     pauseSong(message) {
-        if (!this.validatePlayerControlFunction) {
+        if (!this.validatePlayerControlFunction(message)) {
             return
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
@@ -129,7 +125,7 @@ exports.YTMusicPlayer = class {
         }
     }
     resume(message) {
-        if (!this.validatePlayerControlFunction) {
+        if (!this.validatePlayerControlFunction(message)) {
             return
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
@@ -147,41 +143,58 @@ exports.YTMusicPlayer = class {
         }
     }
     setRepeat(message) {
-        if (this.repeat && this.LastPlayed) {
-            this.repeat = false;
+        if (!this.validatePlayerControlFunction(message)) {
+            return
+        }
+        if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
+            if (this.repeat && this.LastPlayed) {
+                this.repeat = false;
+                this.LastPlayed.song_data.message_to_delete.delete();
+                this.setNowPlayingTitle(message);
+                return;
+            }
+            else if (!this.LastPlayed) {
+                message.reply("Sumimasen, there is no song that I can set to repeat");
+                return;
+            }
+            this.repeat = true;
             this.LastPlayed.song_data.message_to_delete.delete();
             this.setNowPlayingTitle(message);
-            return;
         }
-        else if (!this.LastPlayed) {
-            message.reply("Sumimasen, there is no song that I can set to repeat");
-            return;
+        else {
+            message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently playing music. Please go to that voice channel and request again. Thank you (^-^)");
         }
-        this.repeat = true;
-        this.LastPlayed.song_data.message_to_delete.delete();
-        this.setNowPlayingTitle(message);
     }
-    async play(message) {
+    play(message) {
         try {
             if (this.LastPlayed.song_data.onQueue) {
                 this.LastPlayed.song_data.on_queue_message.delete();
             }
             this.setNowPlayingTitle(message);
-            this.connection.playStream(await ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto" })
-                .on("end", async () => {
+            this.connection.playStream(ytdl(this.LastPlayed.song_data.url, { filter: "audioonly" }), { bitrate: "auto" })
+                .on("end", () => {
                     console.log("Music ended!");
                     this.LastPlayed.song_data.message_to_delete.delete();
-                    if (!this.repeat) {
-                        if (this.LastPlayed.next) {
-                            this.LastPlayed = this.LastPlayed.next;
+                    if (this.repeat) {
+                        if(this.skipSong){
+                            if (this.LastPlayed.next){
+                                this.LastPlayed = this.LastPlayed.next;
+                            }
+                            else{
+                                this.endPlayer();
+                                return;
+                            }
                         }
-                        else {
-                            this.endPlayer();
-                        }
+                        this.play(message);
                     }
-                    if (!this.LastPlayed.next) {
+                    else if (this.LastPlayed.next) {
+                        this.LastPlayed = this.LastPlayed.next;
+                        this.play(message);
+                    }
+                    else {
                         this.endPlayer();
                     }
+
                 })
                 .on("error", error => {
                     throw error;
