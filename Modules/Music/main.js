@@ -16,6 +16,7 @@ exports.YTMusicPlayer = class {
         this.repeat = false;
         this.skipSong = false;
         this.backTriggered = false;
+        this.stopping = false;
     }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
@@ -92,9 +93,8 @@ exports.YTMusicPlayer = class {
             return;
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
-            this.repeat = false;
+            this.stopping = true;
             this.connection.dispatcher.end();
-            this.reset();
         }
         else {
             message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently playing music. Please go to that voice channel and request again. Thank you (^-^)");
@@ -179,7 +179,7 @@ exports.YTMusicPlayer = class {
                     this.LastPlayed = this.LastPlayed.previous;
                 }
             }
-            else{
+            else {
                 message.reply("Ano.. sumimasen, we reach the very bottom of the queue list. There is no song i can go back (>_<)");
             }
         }
@@ -197,32 +197,35 @@ exports.YTMusicPlayer = class {
                 .on("end", () => {
                     console.log("Music ended!");
                     this.LastPlayed.song_data.message_to_delete.delete();
-                    if (this.repeat) {
-                        if (this.skipSong) {
-                            this.skipSong = false;
-                            if (this.LastPlayed.next) {
-                                this.LastPlayed = this.LastPlayed.next;
+                    if (!this.stopping) {
+                        if (this.repeat) {
+                            if (this.skipSong) {
+                                this.skipSong = false;
+                                if (this.LastPlayed.next) {
+                                    this.LastPlayed = this.LastPlayed.next;
+                                }
+                                else {
+                                    this.endPlayer();
+                                    return;
+                                }
                             }
-                            else {
-                                this.endPlayer();
-                                return;
-                            }
+                            this.play(message);
+                            return;
                         }
-                        this.play(message);
+                        else if (this.backTriggered) {
+                            this.backTriggered = false;
+                            this.LastPlayed = this.LastPlayed.previous;
+                            this.play(message);
+                            return;
+                        }
+                        else if (this.LastPlayed.next) {
+                            this.skipSong = false;
+                            this.LastPlayed = this.LastPlayed.next;
+                            this.play(message);
+                            return;
+                        }
                     }
-                    else if(this.backTriggered){
-                        this.backTriggered = false;
-                        this.LastPlayed = this.LastPlayed.previous;
-                        this.play(message);
-                    }
-                    else if (this.LastPlayed.next) {
-                        this.skipSong = false;
-                        this.LastPlayed = this.LastPlayed.next;
-                        this.play(message);
-                    }
-                    else {
-                        this.endPlayer();
-                    }
+                    this.endPlayer();
                 })
                 .on("error", error => {
                     throw error;
