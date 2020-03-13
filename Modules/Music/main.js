@@ -177,6 +177,7 @@ exports.YTMusicPlayer = class {
                     this.LastPlayed.song_data.message_to_delete.delete();
                     if (this.repeat) {
                         if(this.skipSong){
+                            this.skipSong = false;
                             if (this.LastPlayed.next){
                                 this.LastPlayed = this.LastPlayed.next;
                             }
@@ -188,13 +189,13 @@ exports.YTMusicPlayer = class {
                         this.play(message);
                     }
                     else if (this.LastPlayed.next) {
+                        this.skipSong = false;
                         this.LastPlayed = this.LastPlayed.next;
                         this.play(message);
                     }
                     else {
                         this.endPlayer();
                     }
-
                 })
                 .on("error", error => {
                     throw error;
