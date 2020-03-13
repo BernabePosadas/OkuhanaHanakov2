@@ -238,6 +238,7 @@ exports.YTMusicPlayer = class {
     endPlayer() {
         this.LastPlayed.song_data.message_to_delete.delete();
         this.voiceChannel.leave();
+        this.removeQueueLogs();
         this.reset();
     }
     removeQueueLogs() {
