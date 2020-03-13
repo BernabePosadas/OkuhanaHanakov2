@@ -15,6 +15,7 @@ exports.YTMusicPlayer = class {
         this.connection = null;
         this.repeat = false;
         this.skipSong = false;
+        this.backTriggered = false;
     }
     async start(message) {
         var args = message.content.substring(6).toString().trim();
@@ -71,7 +72,7 @@ exports.YTMusicPlayer = class {
     }
     skip(message) {
         if (!this.validatePlayerControlFunction(message)) {
-            return
+            return;
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
             this.skipSong = true;
@@ -88,7 +89,7 @@ exports.YTMusicPlayer = class {
 
     stop(message) {
         if (!this.validatePlayerControlFunction(message)) {
-            return
+            return;
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
             this.repeat = false;
@@ -101,7 +102,7 @@ exports.YTMusicPlayer = class {
     }
     pauseSong(message) {
         if (!this.validatePlayerControlFunction(message)) {
-            return
+            return;
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
             if (!(this.paused) && this.LastPlayed) {
@@ -126,7 +127,7 @@ exports.YTMusicPlayer = class {
     }
     resume(message) {
         if (!this.validatePlayerControlFunction(message)) {
-            return
+            return;
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
             if (this.paused && this.LastPlayed) {
@@ -144,7 +145,7 @@ exports.YTMusicPlayer = class {
     }
     setRepeat(message) {
         if (!this.validatePlayerControlFunction(message)) {
-            return
+            return;
         }
         if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
             if (this.repeat && this.LastPlayed) {
@@ -165,6 +166,27 @@ exports.YTMusicPlayer = class {
             message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently playing music. Please go to that voice channel and request again. Thank you (^-^)");
         }
     }
+    back(message) {
+        if (!this.validatePlayerControlFunction(message)) {
+            return;
+        }
+        if (this.validateSameVoiceChannel(message.member.voiceChannel)) {
+            if (this.LastPlayed.previous) {
+                this.backTriggered = true;
+                if (this.connection.dispatcher) {
+                    this.connection.dispatcher.end();
+                } else {
+                    this.LastPlayed = this.LastPlayed.previous;
+                }
+            }
+            else{
+                message.reply("Ano.. sumimasen, we reach the very bottom of the queue list. There is no song i can go back (>_<)");
+            }
+        }
+        else {
+            message.reply("Ano.. sumimasen, you are not joined in the voice channel I'm currently joined. Please go to that voice channel and request again. Thank you (^-^)");
+        }
+    }
     play(message) {
         try {
             if (this.LastPlayed.song_data.onQueue) {
@@ -176,16 +198,21 @@ exports.YTMusicPlayer = class {
                     console.log("Music ended!");
                     this.LastPlayed.song_data.message_to_delete.delete();
                     if (this.repeat) {
-                        if(this.skipSong){
+                        if (this.skipSong) {
                             this.skipSong = false;
-                            if (this.LastPlayed.next){
+                            if (this.LastPlayed.next) {
                                 this.LastPlayed = this.LastPlayed.next;
                             }
-                            else{
+                            else {
                                 this.endPlayer();
                                 return;
                             }
                         }
+                        this.play(message);
+                    }
+                    else if(this.backTriggered){
+                        this.backTriggered = false;
+                        this.LastPlayed = this.LastPlayed.previous;
                         this.play(message);
                     }
                     else if (this.LastPlayed.next) {

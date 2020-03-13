@@ -109,6 +109,10 @@ client.on("message", async msg => {
                 YTPlayer = getYTPlayerInstance(msg.guild.id);
                 YTPlayer.resume(msg);
                 break;
+            case "back":
+                YTPlayer = getYTPlayerInstance(msg.guild.id);
+                YTPlayer.back(msg);
+                break;
             case "launchnuke":
                 if (validateIfR18Channel(msg)) {
                     await nHentaiDoujinViewer.displayDoujinInfo(msg);
