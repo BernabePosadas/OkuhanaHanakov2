@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 var ArrowGenerator = require("./Modules/DanbooruImageRandomizer/ArrowPoolDeckGenerator");
 const PixivApi = require("pixiv-api-client");
 const DanbooruImageRandomizer = require("./Modules/DanbooruImageRandomizer/main");
+const Covid19StatusReporter = require("./Modules/covid19Reporter/main");
 const MusicPlayer = require("./Modules/Music/main");
 const GlobalVariables = require("./GlobalVariables/GlobalVariables");
 const ErrorReporter = require("./Modules/ExceptionHandling/ErrorReporter");
@@ -125,13 +126,17 @@ client.on("message", async msg => {
             case "help":
                 viewAvailCommands(msg);
                 break;
+            case "covid":
+                 await Covid19StatusReporter.FetchReport(msg);
+                 break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
                 break;
         }
     } catch (exception) {
+        console.log(exception);
         msg.reply("Sumimasen, Sumimasen. I'm unable to perform your requested command. I let my master know what is wrong. Please forgive me (T⌓T).");
-        ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception);
+        //ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception);
     }
 
 })
