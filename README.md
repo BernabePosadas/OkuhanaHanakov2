@@ -25,8 +25,11 @@ A Discord Bot that i created for practicing coding in node and discord js API.
     - `!pause` - pause the currently playing song
     - `!resume` - resume the paused song
     - `!stop` - stops the player and remove all items in queue
+    - `!togglerepeate` - toggle repeat status of the song
+    - `!back` - go back to previously played song 
 3) Misc commands
-   - `!launchnuke <code>` - will display nHentai doujin basic information when given a nHenati doujin ID(or weebs call it nuke codes)  
+   - `!launchnuke <code>` - will display nHentai doujin basic information when given a nHenati doujin ID(or weebs call it nuke codes) 
+   - `!help` - a quick guide on the bot and its capabilities 
 ## What is my motivation to create this? 
   To gave myself an excercise to code and to automate fetching `abigail williams` photo to be sent to Mark. 
 
