@@ -3,7 +3,6 @@ const Discord = require("discord.js");
 var ArrowGenerator = require("./Modules/DanbooruImageRandomizer/ArrowPoolDeckGenerator");
 const PixivApi = require("pixiv-api-client");
 const DanbooruImageRandomizer = require("./Modules/DanbooruImageRandomizer/main");
-const Covid19StatusReporter = require("./Modules/covid19Reporter/main");
 const MusicPlayer = require("./Modules/Music/main");
 const GlobalVariables = require("./GlobalVariables/GlobalVariables");
 const ErrorReporter = require("./Modules/ExceptionHandling/ErrorReporter");
