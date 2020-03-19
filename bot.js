@@ -126,9 +126,6 @@ client.on("message", async msg => {
             case "help":
                 viewAvailCommands(msg);
                 break;
-            case "covid":
-                 await Covid19StatusReporter.FetchReport(msg);
-                 break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
                 break;
