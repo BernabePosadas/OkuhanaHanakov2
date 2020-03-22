@@ -174,7 +174,7 @@ function getYTPlayerInstance(id) {
     return serverQueueList.get(id);
 }
 function viewAvailCommands(msg) {
-    var DanbooruImageCommandsDefault = `!danbooru <query> random search images from danbooru given the tag \`<query>\` (R18 channels only)\n!safebooru <query> random search images from safebooru given the tag \`<query>\` (for non nsfw channel)`;
+    var DanbooruImageCommandsDefault = `\`!danbooru <query>\` random search images from danbooru given the tag \`<query>\` (R18 channels only)\n\`!safebooru <query>\` random search images from safebooru given the tag \`<query>\` (for non nsfw channel)`;
     var HelpBanner = new Discord.RichEmbed()
         .setColor("#0055ff")
         .setTitle("Okuhana Hanako")

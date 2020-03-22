@@ -39,11 +39,15 @@ exports.HanakoArrows = class {
             msg.reply("Sumimasen. I can`t search with query having more than 2 tags");
             return;
         }
-        var response = await danbooru.fetchRandomImage(args[0] + " " + args[1], searchFrom);
+        var tags  = "";
+        args.forEach(element => {
+            tags = tags + element + " ";
+        });
+        var response = await danbooru.fetchRandomImage(tags, searchFrom);
         if (response === "no data") {
             var reply  = "Sumimasen. I find no image matching with tags" 
             args.forEach(element => {
-                reply = reply + ` \`${element}\` `;
+                reply = reply +` \`${element}\` `;
             });
             msg.reply(reply);
             return;
