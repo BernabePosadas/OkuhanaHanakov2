@@ -4,7 +4,7 @@ exports.RandomGet = function (deck){
      
 }
 exports.RandomSurpriseShoot= function(){
-  var results = ["mark", "ivan", "me", "all"];
+  var results = ["mark", "ivan", "me", "all", "chino"];
   results = shuffle(results);
   return results[Math.floor(Math.random() * 3)];
 }

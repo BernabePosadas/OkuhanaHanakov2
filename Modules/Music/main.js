@@ -231,12 +231,12 @@ exports.YTMusicPlayer = class {
                     throw error;
                 });
         } catch (err) {
+            this.LastPlayed.song_data.message_to_delete.delete();
             this.endPlayer();
             throw err;
         }
     }
     endPlayer() {
-        this.LastPlayed.song_data.message_to_delete.delete();
         this.voiceChannel.leave();
         this.removeQueueLogs();
         this.reset();

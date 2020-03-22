@@ -66,7 +66,7 @@ client.on("message", async msg => {
         else if (msg.author.id != parseInt(GlobalVariables.DiscordIDs.BernabeDiscordID) && maintenance) {
             msg.reply("Sumimasen, Im currently on training with my master");
         }
-        const args = msg.content.slice(prefix.length).split(/ +/)
+        const args = msg.content.slice(prefix.length).split(/ +/);
         const command = args.shift().toLowerCase();
         switch (command) {
             case "killmark":
@@ -125,6 +125,14 @@ client.on("message", async msg => {
             case "help":
                 viewAvailCommands(msg);
                 break;
+            case "danbooru":
+                if(validateIfR18Channel(msg)){
+                    await HanakoArrows.searchRandomImage(msg, "Danbooru");
+                }
+                break;
+            case "safebooru":
+                await HanakoArrows.searchRandomImage(msg, "Safebooru");
+                break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
                 break;
@@ -166,7 +174,7 @@ function getYTPlayerInstance(id) {
     return serverQueueList.get(id);
 }
 function viewAvailCommands(msg) {
-    var TheGulagAdditionalCommands = "";
+    var DanbooruImageCommandsDefault = `!danbooru <query> random search images from danbooru given the tag \`<query>\` (R18 channels only)\n!safebooru <query> random search images from safebooru given the tag \`<query>\` (for non nsfw channel)`;
     var HelpBanner = new Discord.RichEmbed()
         .setColor("#0055ff")
         .setTitle("Okuhana Hanako")
@@ -174,7 +182,10 @@ function viewAvailCommands(msg) {
         .setDescription(`A Discord Bot that my master [Bernabe Posadas Jr.](https://github.com/BernabePosadas) created for practicing coding in node and exploring discord js API.`);
     msg.channel.send(HelpBanner);
     if (msg.guild.id === "677136815894822922") {
-        createMyCapabilities("Danbooru/Safebooru Random Image Fetcher", `\`!killmark\` shoots <@${GlobalVariables.DiscordIDs.MarkDiscordID}>\n \`!killivan\` shoots <@${GlobalVariables.DiscordIDs.IvanDiscordID}>\n \`!killmaster\` shoots <@${GlobalVariables.DiscordIDs.BernabeDiscordID}>`, msg);
+        createMyCapabilities("Danbooru/Safebooru Random Image Fetcher", `\`!killmark\` shoots <@${GlobalVariables.DiscordIDs.MarkDiscordID}>\n \`!killivan\` shoots <@${GlobalVariables.DiscordIDs.IvanDiscordID}>\n \`!killmaster\` shoots <@${GlobalVariables.DiscordIDs.BernabeDiscordID}>\n`+DanbooruImageCommandsDefault, msg);
+    }
+    else{
+        createMyCapabilities("Danbooru/Safebooru Random Image Fetcher", DanbooruImageCommandsDefault, msg);
     }
     createMyCapabilities("YouTube Music Player", `\`!play <title>\` plays a song from YouTube. Alternatively you can put the URL on \`<title>\`\n\`!skip\` skips a song\n\`!stop\` stop and wipes all song in queue\n\`!pause\` pause the current song\n\`!resume\` resume paused song\n\`!togglerepeat\` toggles current song repeat status`, msg);
     createMyCapabilities("Nutaku Nuke Launcher", `\`!launchnuke <code>\` finds a nutaku doujin with the id \`<code>\``, msg);

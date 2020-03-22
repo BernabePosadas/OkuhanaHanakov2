@@ -7,17 +7,17 @@ exports.createBernabeDeck = function () {
         "kuko_(flower_knight_girl)",
         "heliotrope_(flower_knight_girl)",
         "flandre_scarlet",
-        ""
+        "nepgear"
     ];
     var probabilities = [
-        108, // 54 % of 200 collections 
-        20,  // 10 %
-        10,  // 5 % 
-        10,  // 5%
-        10,  // 5%
-        10,  // 5%
-        31,  // 15.5%
-        1    // 0.5%
+        112, // 56 % of 200 collections 
+        4,   // 2 %
+        4,   // 2 % 
+        4,   // 2 %
+        4 ,  // 2 %
+        4 ,  // 2 %
+        41,  // 20.5 %
+        27   // 13.5 %
     ];
     return createDeck(candidates, probabilities);
     
@@ -30,8 +30,8 @@ exports.createMarkDeck = function () {
         "kokkoro_(princess_connect!) "
     ];
     var probabilities = [
-        8,  // 100 % of 2 collections 
-        2
+        8,  // 80 % of 10 collections 
+        2   // 20%  
     ];
     return createDeck(candidates, probabilities);
 }
