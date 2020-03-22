@@ -133,6 +133,9 @@ client.on("message", async msg => {
             case "safebooru":
                 await HanakoArrows.searchRandomImage(msg, "Safebooru");
                 break;
+            case "ougi":
+                await HanakoArrows.shootChinoArrow(msg);
+                break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
                 break;

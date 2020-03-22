@@ -69,7 +69,7 @@ exports.HanakoArrows = class {
                 await this.KillBernabe(msg);
                 break;
             case "chino":
-                msg.channel.send(">***Began charging her arrow***");
+                msg.channel.send("> ***Began charging her arrow***");
                 await this.shootChinoArrow(msg);
                 break;
             default:
