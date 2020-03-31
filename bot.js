@@ -143,7 +143,7 @@ client.on("message", async msg => {
     } catch (exception) {
         console.log(exception);
         msg.reply("Sumimasen, Sumimasen. I'm unable to perform your requested command. I let my master know what is wrong. Please forgive me (T⌓T).");
-        ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception);
+        //ErrorReporter.ReportErrorToDev(client, GlobalVariables.DiscordIDs.BernabeDiscordID, BotExceptionLogChannel, exception);
     }
 
 })

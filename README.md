@@ -15,6 +15,7 @@ A Discord Bot that i created for practicing coding in node and discord js API.
     - `!killivan` -  makes the bot send random post from danbooru to my friend [Ivan](https://web.facebook.com/johnivan.demesa) from his tag pool. `prediefined`
     - `!killmaster` - makes the bot send random post from danbooru to me from my tag pool. `prediefined`
     - `!omakaseshot` - makes the bot randomly send either me, Ivan, Mark, all of us, or send a random `kafuu_chino` image. `prediefined`
+    - `!ougi` - makes the bot send a random `kafuu_chino` image. `prediefined`
     - `!danbooru <query>` - search random image based on the tag `<query>` given .(Currently has restriction of maximum of 2 tags). 
     - `!safebooru <query>` - same as `!danbooru` but with no R18 content(based on danbooru R18 standards) and available on non NSFW text channel.  
 
