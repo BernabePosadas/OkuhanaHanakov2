@@ -16,7 +16,7 @@ exports.nHentaiViewer = class {
             .setColor("#FFC0CB")
             .setTitle(doujinInfo.title.english)
             .setImage(`https://t.nhentai.net/galleries/${doujinInfo.media_id}/cover.${ext}`)
-            .addField("Tags: ", this.displayTags(doujinInfo.tags, "tag"))
+            .addDescription("Tags: \n" + this.displayTags(doujinInfo.tags, "tag"))
             .addField("Artist: ", this.displayTags(doujinInfo.tags, "artist"))
             .addField("Group: ", this.displayTags(doujinInfo.tags, "group"))
             .addField("Character: ", this.displayTags(doujinInfo.tags, "character"))
