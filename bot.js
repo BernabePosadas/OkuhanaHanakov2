@@ -115,7 +115,12 @@ client.on("message", async msg => {
                 break;
             case "launchnuke":
                 if (validateIfR18Channel(msg)) {
-                    await nHentaiDoujinViewer.displayDoujinInfo(msg);
+                    await nHentaiDoujinViewer.displayDoujinInfo(msg, false);
+                }
+                break;
+            case "doujintags":
+                if (validateIfR18Channel(msg)) {
+                    await nHentaiDoujinViewer.displayDoujinInfo(msg, true);
                 }
                 break;
             case "togglerepeat":
