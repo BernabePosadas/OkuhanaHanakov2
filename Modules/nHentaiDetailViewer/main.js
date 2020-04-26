@@ -29,7 +29,7 @@ exports.nHentaiViewer = class {
         var tagList = "";
         tags.forEach(tag => {
             if(tag.type == tagType){
-                tagList += `[[${tag.name} (${tag.count})](https://nhentai.net/${tag.url})] `;
+                tagList += `[[${tag.name} (${tag.count})](https://nhentai.net${tag.url})] `;
             }
         });
         if(tagList === ""){
