@@ -186,7 +186,7 @@ function viewAvailCommands(msg) {
     var HelpBanner = new Discord.RichEmbed()
         .setColor("#0055ff")
         .setTitle("Okuhana Hanako")
-        .setAuthor("Okuhana Hanako", "https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanako/master/images/hanako_portrait", "https://github.com/BernabePosadas/OkuhanaHanako")
+        .setAuthor("Okuhana Hanako", "https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanako/master/images/hanako_portrait.png", "https://github.com/BernabePosadas/OkuhanaHanako")
         .setDescription(`A Discord Bot that my master [Bernabe Posadas Jr.](https://github.com/BernabePosadas) created for practicing coding in node and exploring discord js API.`);
     msg.channel.send(HelpBanner);
     if (msg.guild.id === "677136815894822922") {
@@ -202,7 +202,7 @@ function createMyCapabilities(header, content, msg){
     HelpBanner = new Discord.RichEmbed()
     .setColor("#0055ff")
     .setTitle("My Capabilities")
-    .setAuthor("Okuhana Hanako", "https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanako/master/images/hanako_portrait", "https://github.com/BernabePosadas/OkuhanaHanako")
+    .setAuthor("Okuhana Hanako", "https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanako/master/images/hanako_portrait.png", "https://github.com/BernabePosadas/OkuhanaHanako")
     .addField(header, content, true)
     msg.channel.send(HelpBanner);
 }
