@@ -1,6 +1,6 @@
 {
   "name": "Okuhana_Hanako",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "",
   "main": "bot.js",
   "dependencies": {
@@ -15,10 +15,10 @@
     "node-gyp": "^6.1.0",
     "node-opus": "^0.3.3",
     "pixiv-api-client": "^0.22.0",
-    "ytdl-core": "^1.0.9"
+    "ytdl-core": "^2.0.1"
   },
   "scripts": {
-    "start": "node bot.js",
+    "start": "pm2 start bot.js",
     "dev": "nodemon bot.js"
   },
   "devDependencies": {

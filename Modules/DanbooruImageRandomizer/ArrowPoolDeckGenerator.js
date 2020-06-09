@@ -44,16 +44,18 @@ exports.createIvanDeck = function() {
         "enokorogusa_(flower_knight_girl)",
         "jack_the_ripper_(fate/apocrypha)",
         "nursery_rhyme_(fate/extra)",
-        "megumin"
+        "megumin",
+        "helena_blavatsky_(fate/grand_order)"
     ];
     var probabilities = [
         2, // 10 % of 20 collections 
         1, // 5%
-        2, // 10%
-        2, // 10%
+        1, // 5%
+        1, // 5%
         6, // 30%
         3, // 15%
         4, // 20%
+        2, // 10%
     ];
     return createDeck(candidates, probabilities);
 }
