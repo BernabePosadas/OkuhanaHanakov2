@@ -1,11 +1,19 @@
-import { injectable } from "inversify";
+import { Danbooru } from "./../Data_Source/Danbooru";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../types";
+import { Shuffler } from "./../Shuffle";
+import { DanbooruPost } from "../../Models/Interfaces/DanbooruPost";
 
 @injectable()
 export class Quiver{
-    public _bernabe_arrows : Array<string> = [];
-    public _mark_arrows : Array<string> = [];
-    public _ivan_arrows : Array<string> = [];
-    constructor(){ 
+    private _bernabe_arrows : Array<string> = [];
+    private _mark_arrows : Array<string> = [];
+    private _ivan_arrows : Array<string> = [];
+    private readonly _danbooru : Danbooru;
+    constructor(
+        @inject(TYPES.Danbooru) danbooru : Danbooru
+    ){ 
+         this._danbooru = danbooru;
          this.loadTheArrows();
     }
     private loadTheArrows(){
@@ -78,14 +86,22 @@ export class Quiver{
         });
         return deck;
     }
-    public pickAnArrow(person_to_shoot : string){
+    public async pickAnArrow(person_to_shoot : string) : Promise<DanbooruPost>{
         switch(person_to_shoot){
             case "bernabe": 
-                
+                return this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._bernabe_arrows), "danbooru");
             case "mark" :
+                return this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._mark_arrows), "danbooru");
             case "ivan" : 
+                return this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._ivan_arrows), "danbooru");
+            case "chino" :
+                return this._danbooru.fetchRandomImage("kafuu_chino", "danbooru");
             default :
                 throw new Error("there is no task for person_to_shoot case : " + person_to_shoot);
         }
     }
+    public async genericDanbooruRandomImageSearch(tags : string, searchFrom : string) : Promise<DanbooruPost>{
+        return this._danbooru.fetchRandomImageGeneric(tags, searchFrom);
+    }
+    
 }

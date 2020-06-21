@@ -1,7 +1,7 @@
 // from :  https://github.com/coolaj86/knuth-shuffle
 
 export class Shuffler {
-    public static shuffleArray(array : Array<string>) {
+    public static shuffleAndPickFromArray(array : Array<any>) : any {
         var currentIndex = array.length, temporaryValue, randomIndex;
 
         // While there remain elements to shuffle...
@@ -16,7 +16,6 @@ export class Shuffler {
             array[currentIndex] = array[randomIndex];
             array[randomIndex] = temporaryValue;
         }
-
-        return array;
+        return array[Math.floor(Math.random() * array.length)];
     }
 }
