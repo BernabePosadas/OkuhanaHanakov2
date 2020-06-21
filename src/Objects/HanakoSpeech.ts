@@ -13,4 +13,6 @@ export class HanakoSpeech {
     public static NOT_IN_WEEB_SERVER : string = "Ano.. sumimasen, The command you requested is only available to the weeb server master created.";
     public static MORE_THAN_TAG_LIMIT_SPEECH :string = "Sumimasen. I can only search dan/safebooru with 2 tags";
     public static NSFW_POST_TO_NON_NSFW_SPEECH : string = "Sumimasen. I cant serve R18 connect on SFW channels. Please go to any NSFW marked text channel and request again. Thank you (^-^).";
+    public static NO_DOUJIN_FOUND_SPEECH : string = "uwheeeeh, code doesnt work (T-T).";
+    public static COMMAND_INVALID : string = "Ano.. sumimasen, command requested is invalid. Please check the spelling and try again (^-^)."; 
 }

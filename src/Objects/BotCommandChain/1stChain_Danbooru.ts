@@ -1,9 +1,10 @@
 import { CommandChain } from "../../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
 import { Bow } from "../DanbooruImageRandomizer/Bow";
+import { nHentaiCommandChain } from "./2ndChain_nHentai";
 
 export class DanbooruCommandChain implements CommandChain{
-    public _bow : Bow;
+    private _bow : Bow;
     constructor(bow : Bow){
        this._bow = bow;
     } 
@@ -31,7 +32,8 @@ export class DanbooruCommandChain implements CommandChain{
                 this._bow.doGenericDanbooruImageSearch(msg, "safebooru");
                 break;
             default:
-                msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
+                var CommandChain2nd : CommandChain = new nHentaiCommandChain();
+                CommandChain2nd.executeChain(msg, command);
                 break;
         }
     }

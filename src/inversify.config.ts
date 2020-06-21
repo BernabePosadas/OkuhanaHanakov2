@@ -21,5 +21,5 @@ container.bind<string | undefined>(TYPES.Danbooru_Key).toConstantValue(process.e
 container.bind<Danbooru>(TYPES.Danbooru).to(Danbooru).inSingletonScope();
 container.bind<Quiver>(TYPES.Quiver).to(Quiver).inSingletonScope();
 container.bind<Bow>(TYPES.Bow).to(Bow).inRequestScope(); 
-
+Container.bind
 export default container;
