@@ -1,5 +1,5 @@
 
-export function checkError(value :Response | any){
+export function checkError(value : Response | any){
     var queryStringLocation = value.url.indexOf("?");
     var url =value.url;
     if(queryStringLocation > 0){

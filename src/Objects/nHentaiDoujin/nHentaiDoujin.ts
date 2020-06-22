@@ -1,6 +1,4 @@
 import { nHentai } from "../Data_Source/nHentai";
-import { inject, injectable } from "inversify";
-import { TYPES } from "../../types";
 import { Message, RichEmbed } from "discord.js";
 import { HanakoSpeech } from "../HanakoSpeech";
 import { checkIfR18 } from "../R18ChannelValidator";

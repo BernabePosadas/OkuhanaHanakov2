@@ -1,7 +1,7 @@
 import { Client, Message } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "./types";
-import { TheWeebsDiscordID } from "./Objects/TheWeebsDiscordIDs";
+import { TheWeebsDiscordID } from "./Models/Static/TheWeebsDiscordIDs";
 import { Bow } from "./Objects/DanbooruImageRandomizer/Bow";
 import { DanbooruCommandChain } from "./Objects/BotCommandChain/1stChain_Danbooru";
 import { CommandChain } from "./Models/Interfaces/CommandChain";
