@@ -15,4 +15,6 @@ export class HanakoSpeech {
     public static NSFW_POST_TO_NON_NSFW_SPEECH : string = "Sumimasen. I cant serve R18 connect on SFW channels. Please go to any NSFW marked text channel and request again. Thank you (^-^).";
     public static NO_DOUJIN_FOUND_SPEECH : string = "uwheeeeh, code doesnt work (T-T).";
     public static COMMAND_INVALID : string = "Ano.. sumimasen, command requested is invalid. Please check the spelling and try again (^-^)."; 
+    public static NOT_IN_VOICE_CHANNEL : string = "Ano.. you not on any voice channel. Please join a voice channel.";
+    public static NO_PERMISSION_ON_VOICE_CHANNEL : string = "(>_<) I cant join your current voice channel. Please give permission (T⌓T)";
 }

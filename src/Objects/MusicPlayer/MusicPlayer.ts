@@ -11,7 +11,11 @@ export class MusicPlayer implements IMusicPlayer {
     public _now_playing: IMusicPlaylist | undefined;
     public _player_status: number;
     private _connection: VoiceConnection;
+    public _repeat : boolean;
+    public _override_action : string;
     constructor(connection: VoiceConnection) {
+        this._repeat = false;
+        this._override_action = "";
         this._connection = connection;
         this._player_status = MusicPlayerStatus.IDLE;
     }
@@ -21,6 +25,7 @@ export class MusicPlayer implements IMusicPlayer {
                 var play_item: IMusicPlaylist = new YoutubeMusicPlaylist(song);
                 this._now_playing = play_item;
                 this._player_status = MusicPlayerStatus.READY;
+                return true;
             }
             this._now_playing?.setNextQueue(song);
             return true;
@@ -30,6 +35,8 @@ export class MusicPlayer implements IMusicPlayer {
         }
     }
     public playSong(): boolean {
+        console.log("here");
+        this._override_action="";
         if (this._now_playing != undefined) {
             if (this._now_playing?._song_data != undefined) {
                 this._player_status = MusicPlayerStatus.PLAYING;
@@ -44,20 +51,22 @@ export class MusicPlayer implements IMusicPlayer {
         throw new Error("Fatal error : now_playing is undefined").stack;
     }
     public skipSong(): boolean {
-        if (this._player_status === MusicPlayerStatus.PLAYING) {
+        if (this._player_status !== MusicPlayerStatus.IDLE && this._player_status !== MusicPlayerStatus.PAUSED) {
             if (this._now_playing?._next != undefined) {
                 this._now_playing = this._now_playing._next;
                 if (this._connection.dispatcher) {
                     this._connection.dispatcher.end();
                 }
+                this._override_action = "next";
                 return true;
             }
         }
         return false;
     }
     public stopPlayer(): boolean {
-        if (this._player_status === MusicPlayerStatus.PLAYING) {
+        if (this._player_status !== MusicPlayerStatus.IDLE) {
             this._player_status = MusicPlayerStatus.IDLE;
+            this._repeat = false;
             this._connection.dispatcher.end();
             this._now_playing = undefined;
             return true;
@@ -81,14 +90,22 @@ export class MusicPlayer implements IMusicPlayer {
         return false;
     }
     public previous(): boolean {
-        if (this._player_status === MusicPlayerStatus.PLAYING) {
+        if (this._player_status !== MusicPlayerStatus.IDLE && this._player_status !== MusicPlayerStatus.PAUSED) {
             if (this._now_playing?._previous != undefined) {
                 this._now_playing = this._now_playing._previous;
                 if (this._connection.dispatcher) {
                     this._connection.dispatcher.end();
                 }
+                this._override_action = "previous";
                 return true;
             }
+        }
+        return false;
+    }
+    public toggleRepeat(): boolean {
+        if (this._player_status === MusicPlayerStatus.PLAYING) {
+            this._repeat = !this._repeat;
+            return true;
         }
         return false;
     }

@@ -1,6 +1,7 @@
 import { CommandChain } from "../../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
 import { nHentaiDoujin } from "../nHentaiDoujin/nHentaiDoujin";
+import { MusicPlayerCommandChain } from "./3ndChain_MusicPlayer";
 
 export class nHentaiCommandChain implements CommandChain{
     private _nhentai_doujin : nHentaiDoujin;
@@ -16,7 +17,8 @@ export class nHentaiCommandChain implements CommandChain{
                 this._nhentai_doujin.searchAndServeDoujin(msg, true);
                 break;
             default:
-                msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
+                var CommandChain3rd : CommandChain = new MusicPlayerCommandChain();
+                CommandChain3rd.executeChain(msg, command);
                 break;
         }
     }

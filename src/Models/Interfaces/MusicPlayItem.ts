@@ -5,6 +5,6 @@ export interface MusicPlayItem{
     youtube_link : string;
     thumbnail : string;
     requested_by : string;
-    anounce_message : Message;
+    anounce_message : Message | undefined;
     queued : boolean;
 }
