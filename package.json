@@ -24,7 +24,7 @@
     "node": "13.x"
   },
   "scripts": {
-    "start": "pm2 start",
+    "start": "node bot.js",
     "watch": "tsc -p tsconfig.json -w",
     "build" : "tsc"
   },

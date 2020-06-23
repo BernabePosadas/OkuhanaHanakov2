@@ -6,6 +6,7 @@ import { Client } from "discord.js";
 import { Danbooru } from "./Objects/Data_Source/Danbooru";
 import { Quiver } from "./Objects/DanbooruImageRandomizer/Quiver";
 import { Bow } from "./Objects/DanbooruImageRandomizer/Bow";
+import { MusicPlayerControl } from "./Objects/MusicPlayer/MusicPlayerControl";
 
 
 let container = new Container();
@@ -17,7 +18,7 @@ container.bind<string | undefined>(TYPES.Danbooru_Username).toConstantValue(proc
 container.bind<string | undefined>(TYPES.Danbooru_Key).toConstantValue(process.env.DANBOORU_KEY);
 container.bind<Danbooru>(TYPES.Danbooru).to(Danbooru).inSingletonScope();
 container.bind<Quiver>(TYPES.Quiver).to(Quiver).inSingletonScope();
-container.bind<Bow>(TYPES.Bow).to(Bow).inRequestScope(); 
-
+container.bind<Bow>(TYPES.Bow).to(Bow).inSingletonScope(); 
+container.bind<MusicPlayerControl>(TYPES.MusicPlayerControl).to(MusicPlayerControl).inSingletonScope();
 
 export default container;

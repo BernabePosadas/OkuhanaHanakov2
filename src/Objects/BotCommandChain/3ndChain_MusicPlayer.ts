@@ -1,12 +1,11 @@
 import { CommandChain } from "../../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
-import { nHentaiDoujin } from "../nHentaiDoujin/nHentaiDoujin";
 import { MusicPlayerControl } from "../MusicPlayer/MusicPlayerControl";
 
 export class MusicPlayerCommandChain implements CommandChain{
     private _music_player_control : MusicPlayerControl;
-    constructor(){
-        this._music_player_control = new MusicPlayerControl();
+    constructor(music_player_control : MusicPlayerControl){
+        this._music_player_control = music_player_control;
     }
     public executeChain(msg : Message, command : string){
         switch (command) { 

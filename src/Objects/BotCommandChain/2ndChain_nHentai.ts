@@ -2,6 +2,9 @@ import { CommandChain } from "../../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
 import { nHentaiDoujin } from "../nHentaiDoujin/nHentaiDoujin";
 import { MusicPlayerCommandChain } from "./3ndChain_MusicPlayer";
+import container from "./../../inversify.config";
+import { MusicPlayerControl } from "../MusicPlayer/MusicPlayerControl";
+import { TYPES } from "../../types";
 
 export class nHentaiCommandChain implements CommandChain{
     private _nhentai_doujin : nHentaiDoujin;
@@ -17,7 +20,8 @@ export class nHentaiCommandChain implements CommandChain{
                 this._nhentai_doujin.searchAndServeDoujin(msg, true);
                 break;
             default:
-                var CommandChain3rd : CommandChain = new MusicPlayerCommandChain();
+                let MPC = container.get<MusicPlayerControl>(TYPES.MusicPlayerControl);
+                var CommandChain3rd : CommandChain = new MusicPlayerCommandChain(MPC);
                 CommandChain3rd.executeChain(msg, command);
                 break;
         }

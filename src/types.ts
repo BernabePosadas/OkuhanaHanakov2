@@ -7,5 +7,6 @@ export const TYPES = {
     Danbooru_Key : Symbol.for("Danbooru_Key"),
     Danbooru : Symbol.for("Danbooru"),
     Quiver : Symbol.for("Quiver"),
-    Bow : Symbol.for("Bow")
+    Bow : Symbol.for("Bow"),
+    MusicPlayerControl : Symbol.for("MusicPlayerControl")
 };

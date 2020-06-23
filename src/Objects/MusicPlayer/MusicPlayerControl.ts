@@ -8,13 +8,16 @@ import ytdl from "ytdl-core";
 import { MusicPlayer } from "./MusicPlayer";
 import { MusicPlayItem } from "../../Models/Interfaces/MusicPlayItem";
 import { MusicPlayerStatus } from "../../Models/Static/MusicPlayerStatus";
+import { injectable } from "inversify";
 
+@injectable()
 export class MusicPlayerControl implements IMusicControl {
-    public _player_instance: Map<string, import("../../Models/Interfaces/IMusicPlayer").IMusicPlayer>;
+    public _player_instance: Map<string, MusicPlayer>;
     public _youtube_data_api: YoutubeDataAPI;
     constructor() {
         this._youtube_data_api = new YoutubeDataAPI();
-        this._player_instance = new Map<string, IMusicPlayer>();
+        this._player_instance = new Map<string, MusicPlayer>();
+        setInterval(this.worker, 1000);
     }
     public async addToQueue(msg: Message): Promise<void> {
         var args: string = msg.content.substring(6).toString().trim();
@@ -32,15 +35,8 @@ export class MusicPlayerControl implements IMusicControl {
             return;
         }
         if (this.checkForExistingPlayerInstance(msg.guild.id)) {
-            var connection: VoiceConnection = await voiceChannel.join().then(connection => {
-                console.log("Successfully connected to voice channel.");
-                return connection
-            }).catch(e => {
-                throw e
-            });
-            var player: IMusicPlayer = new MusicPlayer(connection);
-            this.createNewPlayerInstance(connection, msg.guild.id);
 
+            this.createNewPlayerInstance(voiceChannel, msg.guild.id);
         }
         if (isYTURL(args)) {
             this._youtube_data_api.searchFirstVideo(args);
@@ -57,26 +53,7 @@ export class MusicPlayerControl implements IMusicControl {
         var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
         if (player_instance !== undefined) {
             if (player_instance._player_status === MusicPlayerStatus.IDLE) {
-                player_instance.addToQueue(this.setPlayItemBanner("#0099FF", "Now Playing " +this.checkIfRepeatIsOn(player_instance), play_item, msg));
-                player_instance.addToQueue(play_item);
-                player_instance.playSong();
-                while (player_instance._player_status !== MusicPlayerStatus.IDLE) {
-                    if (player_instance._player_status == MusicPlayerStatus.READY) {
-                        if (player_instance._override_action === "" && player_instance._repeat) {
-                            if (!player_instance.skipSong()) {
-                                this._player_instance.delete(msg.guild.id);
-                                break;
-                            }
-                        }
-                        if(player_instance._now_playing !== undefined){
-                            this.setPlayItemBanner("#0099FF", "Now Playing " +this.checkIfRepeatIsOn(player_instance), player_instance._now_playing._song_data, msg);
-                            player_instance.playSong();
-                        }
-                        else{
-                            break;
-                        }
-                    }
-                }
+                player_instance.addToQueue(this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), play_item, msg));
             }
             else {
                 play_item.queued = true;
@@ -86,8 +63,6 @@ export class MusicPlayerControl implements IMusicControl {
         else {
             throw new Error("player_instance is undefined").stack;
         }
-
-
     }
     skip(msg: Message): void {
         throw new Error("Method not implemented.");
@@ -107,25 +82,39 @@ export class MusicPlayerControl implements IMusicControl {
     private checkForExistingPlayerInstance(server_id: string): boolean {
         return this._player_instance.get(server_id) === undefined;
     }
-    private createNewPlayerInstance(voice_channel: VoiceConnection, server_id: string) {
+    private createNewPlayerInstance(voice_channel: VoiceChannel, server_id: string) {
         this._player_instance.set(server_id, new MusicPlayer(voice_channel));
     }
-    private setPlayItemBanner(color: string, title: string, play_item: MusicPlayItem, msg : Message): MusicPlayItem {
-        var songInfoBanner = new RichEmbed()
-            .setColor("#000000")
-            .setTitle("Queued")
-            .setImage(play_item.thumbnail)
-            .addField(`[${play_item.title}]`, `[View on YouTube](${play_item.youtube_link})`, true);
-             msg.channel.send(songInfoBanner).then((msg) => {
-            play_item.anounce_message = msg;
-        });
-        return play_item;
+    private setPlayItemBanner(color: string, title: string, play_item: any, msg: Message): MusicPlayItem {
+        try {
+            var songInfoBanner = new RichEmbed()
+                .setColor(color)
+                .setTitle(title)
+                .setImage(play_item.thumbnail)
+                .addField(`[${play_item.title}]`, `[View on YouTube](${play_item.youtube_link})`, true);
+            msg.channel.send(songInfoBanner).then(msg => {
+                play_item.anounce_message = msg;
+            })
+            return play_item;
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
     }
-    private checkIfRepeatIsOn(player_instance : IMusicPlayer) : string{
-        if(player_instance._repeat){
-           return "(repeat on)";
+    private checkIfRepeatIsOn(player_instance: IMusicPlayer): string {
+        if (player_instance._repeat) {
+            return "(repeat on)";
         }
         return "(repeat off)";
+    }
+    worker() {
+        if (this._player_instance !== undefined) {
+            this._player_instance.forEach((value, key, map) => {
+                if (value._remove_instance) {
+                    this._player_instance.delete(key);
+                }
+            });
+        }
     }
 
 }

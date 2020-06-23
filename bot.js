@@ -205,7 +205,7 @@ function setActivity(display, activity_type) {
 }
 //endregion
 
-client.login(process.env.token);
+client.login(process.env.TOKEN);
 //endregion
 
 

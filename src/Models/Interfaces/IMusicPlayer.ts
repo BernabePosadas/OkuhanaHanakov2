@@ -5,9 +5,9 @@ export interface IMusicPlayer{
     _now_playing : IMusicPlaylist | undefined;
     _repeat : boolean;
     _player_status : number;
-    _override_action : string;
-    addToQueue(song : MusicPlayItem) : boolean;
-    playSong() : boolean;
+    _remove_instance : boolean;
+    addToQueue(song : MusicPlayItem) : Promise<boolean>;
+    playSong() : any;
     skipSong() : boolean;
     stopPlayer() : boolean;
     pauseSong() : boolean;

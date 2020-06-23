@@ -3,28 +3,39 @@ import { IMusicPlaylist } from "../../Models/Interfaces/IMusicPlaylist";
 import { MusicPlayerStatus } from "../../Models/Static/MusicPlayerStatus";
 import { YoutubeMusicPlaylist } from "../../Models/YoutubeMusicPlaylist";
 import { MusicPlayItem } from "../../Models/Interfaces/MusicPlayItem";
-import { VoiceConnection } from "discord.js";
+import { VoiceConnection, VoiceChannel } from "discord.js";
 import ytdl from "ytdl-core";
 
 
 export class MusicPlayer implements IMusicPlayer {
     public _now_playing: IMusicPlaylist | undefined;
     public _player_status: number;
-    private _connection: VoiceConnection;
+    private _connection: VoiceConnection | undefined;
+    private _worker : any;
+    private _voice_channel : VoiceChannel;
     public _repeat : boolean;
-    public _override_action : string;
-    constructor(connection: VoiceConnection) {
+    private _prevent_worker : boolean;
+    public _remove_instance : boolean;
+    constructor(voice_channel : VoiceChannel) {
         this._repeat = false;
-        this._override_action = "";
-        this._connection = connection;
+        this._prevent_worker = false;
         this._player_status = MusicPlayerStatus.IDLE;
+        this._remove_instance = false;
+        this._voice_channel = voice_channel
     }
-    public addToQueue(song: MusicPlayItem): boolean {
+    public async addToQueue(song: MusicPlayItem): Promise<boolean> {
         try {
             if (this._player_status === MusicPlayerStatus.IDLE) {
                 var play_item: IMusicPlaylist = new YoutubeMusicPlaylist(song);
                 this._now_playing = play_item;
                 this._player_status = MusicPlayerStatus.READY;
+                this._prevent_worker = true;
+                this._connection = await this._voice_channel.join().then(connection => {
+                    return connection
+                }).catch(e => {
+                    throw e
+                });
+                this._worker = setInterval(this.worker, 1000);
                 return true;
             }
             this._now_playing?.setNextQueue(song);
@@ -34,17 +45,16 @@ export class MusicPlayer implements IMusicPlayer {
             throw error;
         }
     }
-    public playSong(): boolean {
-        console.log("here");
-        this._override_action="";
+    public async playSong() {
+        this._prevent_worker= false;
         if (this._now_playing != undefined) {
             if (this._now_playing?._song_data != undefined) {
                 this._player_status = MusicPlayerStatus.PLAYING;
-                this._connection.playStream(ytdl(this._now_playing._song_data.youtube_link, { filter: "audioonly" }), { bitrate: "auto" })
+                this._connection?.playStream(ytdl(this._now_playing._song_data.youtube_link, { filter: "audioonly" }), { bitrate: "auto" })
                     .on("end", () => {
                         this._player_status = MusicPlayerStatus.READY;
                     });
-                return true;
+                    return;
             }
             throw new Error("Fatal error : song_data is undefined").stack;
         }
@@ -53,11 +63,11 @@ export class MusicPlayer implements IMusicPlayer {
     public skipSong(): boolean {
         if (this._player_status !== MusicPlayerStatus.IDLE && this._player_status !== MusicPlayerStatus.PAUSED) {
             if (this._now_playing?._next != undefined) {
+                this._prevent_worker = true;
                 this._now_playing = this._now_playing._next;
-                if (this._connection.dispatcher) {
+                if (this._connection?.dispatcher) {
                     this._connection.dispatcher.end();
                 }
-                this._override_action = "next";
                 return true;
             }
         }
@@ -65,17 +75,21 @@ export class MusicPlayer implements IMusicPlayer {
     }
     public stopPlayer(): boolean {
         if (this._player_status !== MusicPlayerStatus.IDLE) {
+            if(this._player_status === MusicPlayerStatus.PLAYING){
+                this._connection?.dispatcher.end();
+            }
             this._player_status = MusicPlayerStatus.IDLE;
             this._repeat = false;
-            this._connection.dispatcher.end();
             this._now_playing = undefined;
+            clearInterval(this._worker);
+            this._remove_instance = true;
             return true;
         }
         return false;
     }
     public pauseSong(): boolean {
         if (this._player_status === MusicPlayerStatus.PLAYING) {
-            this._connection.dispatcher.pause();
+            this._connection?.dispatcher.pause();
             this._player_status = MusicPlayerStatus.PAUSED;
             return true;
         }
@@ -83,7 +97,7 @@ export class MusicPlayer implements IMusicPlayer {
     }
     public resumePlayer(): boolean {
         if (this._player_status === MusicPlayerStatus.PAUSED) {
-            this._connection.dispatcher.resume();
+            this._connection?.dispatcher.resume();
             this._player_status = MusicPlayerStatus.PLAYING;
             return true;
         }
@@ -93,10 +107,10 @@ export class MusicPlayer implements IMusicPlayer {
         if (this._player_status !== MusicPlayerStatus.IDLE && this._player_status !== MusicPlayerStatus.PAUSED) {
             if (this._now_playing?._previous != undefined) {
                 this._now_playing = this._now_playing._previous;
-                if (this._connection.dispatcher) {
+                this._prevent_worker = true;
+                if (this._connection?.dispatcher) {
                     this._connection.dispatcher.end();
                 }
-                this._override_action = "previous";
                 return true;
             }
         }
@@ -108,6 +122,19 @@ export class MusicPlayer implements IMusicPlayer {
             return true;
         }
         return false;
+    }
+    worker(){
+        if(!this._prevent_worker && this._player_status === MusicPlayerStatus.READY){
+            if(!this._prevent_worker && !this._repeat){
+                if (this._now_playing?._next != undefined) {
+                    this._now_playing = this._now_playing._next;
+                }
+                else{
+                    this.stopPlayer();
+                }
+            }
+            this.playSong();
+        }
     }
 
 }
