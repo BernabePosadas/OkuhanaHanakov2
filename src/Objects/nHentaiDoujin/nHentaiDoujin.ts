@@ -1,5 +1,5 @@
 import { nHentai } from "../Data_Source/nHentai";
-import { Message, RichEmbed } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import { HanakoSpeech } from "../HanakoSpeech";
 import { checkIfR18 } from "../R18ChannelValidator";
 
@@ -25,7 +25,7 @@ export class nHentaiDoujin{
             this.displayAllTags(msg);
         }
         else {
-            var DetailRichEmbed = new RichEmbed()
+            var DetailMessageEmbed = new MessageEmbed()
                 .setColor("#FFC0CB")
                 .setTitle(this._doujin.title.english)
                 .setImage(`https://t.nhentai.net/galleries/${this._doujin.media_id}/cover.${this._ext}`)
@@ -36,7 +36,7 @@ export class nHentaiDoujin{
                 .addField("Parody: ", this.displayTags("parody"))
                 .addField("Language: ", this.displayTags("language"))
                 .addField(`${this._doujin.images.pages.length} pages`, `[View on nHentai](https://nhentai.net/g/${this._doujin.id})`, true);
-            msg.channel.send(DetailRichEmbed);
+            msg.channel.send(DetailMessageEmbed);
         }
     }
     private displayTags(tagType : string) {
@@ -56,24 +56,24 @@ export class nHentaiDoujin{
     }
     private displayAllTags(msg : Message) {
         var tagList = "";
-        var DetailRichEmbed = null;
+        var DetailMessageEmbed = null;
         this._doujin.tags.forEach((tag: { name: any; count: any; url: any; }) => {
             tagList += `[[${tag.name} (${tag.count})](https://nhentai.net${tag.url})] `;
             if (tagList.length >= 900) {
-                DetailRichEmbed = new RichEmbed()
+                DetailMessageEmbed = new MessageEmbed()
                     .setColor("#FFC0CB")
                     .setTitle(this._doujin.title.english)
                     .addField("Tags(All): ", tagList.trim())
-                msg.channel.send(DetailRichEmbed);
+                msg.channel.send(DetailMessageEmbed);
                 tagList = "";
             }
         });
         if (tagList != "") {
-            DetailRichEmbed = new RichEmbed()
+            DetailMessageEmbed = new MessageEmbed()
                 .setColor("#FFC0CB")
                 .setTitle(this._doujin.title.english)
                 .addField("Tags(All) : ", tagList.trim())
-            msg.channel.send(DetailRichEmbed);
+            msg.channel.send(DetailMessageEmbed);
         }
     }
 }

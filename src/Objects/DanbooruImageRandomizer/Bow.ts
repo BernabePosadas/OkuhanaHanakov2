@@ -63,27 +63,27 @@ export class Bow {
             msg.channel.send((await this._quiver.pickAnArrow("chino")).danbooru_link);
         }
     }
-    public async doGenericDanbooruImageSearch(msg : Message, searchFrom : string){
-        const args : Array<string> = msg.content.slice("!".length).split(/ +/);
+    public async doGenericDanbooruImageSearch(msg: Message, searchFrom: string) {
+        const args: Array<string> = msg.content.slice("!".length).split(/ +/);
         args.shift();
         if (args.length > 2) {
             msg.reply(HanakoSpeech.MORE_THAN_TAG_LIMIT_SPEECH);
             return;
         }
-        var tags : string = "";
+        var tags: string = "";
         args.forEach(element => {
             tags = tags + element + " ";
         });
-        if(searchFrom === "danbooru"){
-            if(!checkIfR18(msg)){
-                return; 
+        if (searchFrom === "danbooru") {
+            if (!checkIfR18(msg)) {
+                return;
             }
         }
         var response = (await this._quiver.genericDanbooruRandomImageSearch(tags, searchFrom)).danbooru_link;
         if (response === "no data") {
-            var reply : string = "Sumimasen. I find no image matching with tags" 
+            var reply: string = "Sumimasen. I find no image matching with tags"
             args.forEach(element => {
-                reply = reply +` \`${element}\` `;
+                reply = reply + ` \`${element}\` `;
             });
             msg.reply(reply);
             return;
@@ -92,15 +92,15 @@ export class Bow {
         msg.channel.send(response);
     }
     private onWeebChannel(msg: Message): boolean {
-        if (msg.channel.id != "677361288246198292" && msg.channel.id != "677361065327067136" && msg.guild.id === "677136815894822922") {
-            msg.reply(HanakoSpeech.NOT_IN_WEEB_GENERAL_CHANNEL_SPEECH);
-            return false;
-        }
-        else if (msg.guild.id != "677136815894822922") {
-            msg.reply(HanakoSpeech.NOT_IN_WEEB_SERVER);
-            return false;
-        }
-        return true;
+            if (msg.channel.id != "677361288246198292" && msg.channel.id != "677361065327067136" && msg.guild?.id === "677136815894822922") {
+                msg.reply(HanakoSpeech.NOT_IN_WEEB_GENERAL_CHANNEL_SPEECH);
+                return false;
+            }
+            else if (msg.guild?.id != "677136815894822922") {
+                msg.reply(HanakoSpeech.NOT_IN_WEEB_SERVER);
+                return false;
+            }
+            return true;
     }
     private async shootAll(msg: Message) {
         if (this.onWeebChannel(msg)) {

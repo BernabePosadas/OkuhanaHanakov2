@@ -6,7 +6,7 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@types/node-fetch": "^2.5.7",
-    "discord.js": "^11.6.4",
+    "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "ffmpeg-static": "^4.2.4",
@@ -14,7 +14,7 @@
     "minimist": "^1.2.5",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
-    "node-gyp": "^6.1.0",
+    "node-gyp": "^7.0.0",
     "node-opus": "^0.3.3",
     "pixiv-api-client": "^0.22.0",
     "reflect-metadata": "^0.1.13",
@@ -26,7 +26,7 @@
   "scripts": {
     "start": "node bot.js",
     "watch": "tsc -p tsconfig.json -w",
-    "build" : "tsc"
+    "build": "tsc"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
