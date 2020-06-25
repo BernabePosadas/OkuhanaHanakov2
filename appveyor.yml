@@ -2,4 +2,3 @@ install:
   - ps: Install-Product node $env:nodejs_version
 build_script: 
   - npm build
-  

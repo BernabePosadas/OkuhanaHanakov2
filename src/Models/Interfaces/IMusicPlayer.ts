@@ -15,4 +15,5 @@ export interface IMusicPlayer{
     pauseSong() : boolean;
     resumePlayer() : boolean;
     previous() : boolean;
+    toggleRepeat() : boolean;
 }

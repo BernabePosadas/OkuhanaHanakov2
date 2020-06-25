@@ -1,9 +1,10 @@
 import { CommandChain } from "../../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
 import { MusicPlayerControl } from "../MusicPlayer/MusicPlayerControl";
+import { IMusicControl } from "../../Models/Interfaces/IMusicPlayerControl";
 
 export class MusicPlayerCommandChain implements CommandChain{
-    private _music_player_control : MusicPlayerControl;
+    private _music_player_control : IMusicControl;
     constructor(music_player_control : MusicPlayerControl){
         this._music_player_control = music_player_control;
     }
@@ -26,6 +27,9 @@ export class MusicPlayerCommandChain implements CommandChain{
                 break;
             case "back":
                 this._music_player_control.back(msg);
+                break;
+            case "togglerepeat":
+                this._music_player_control.repeat(msg);
                 break;
             default:
                 msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");

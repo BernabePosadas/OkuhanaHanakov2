@@ -27,7 +27,7 @@ export class MusicPlayer implements IMusicPlayer {
             if (this._player_status === MusicPlayerStatus.IDLE) {
                 var play_item: IMusicPlaylist = new YoutubeMusicPlaylist(song);
                 this._now_playing = play_item;
-                this._player_status = MusicPlayerStatus.READY;
+                this._player_status = MusicPlayerStatus.LOCKED;
                 this._prevent_worker = true;
                 await this._voice_channel?.join().then(connection => {
                     this._connection = connection;
@@ -51,7 +51,9 @@ export class MusicPlayer implements IMusicPlayer {
                 this._now_playing._song_data.queued = false;
                 this._connection?.play(ytdl(this._now_playing._song_data.youtube_link, { filter: "audioonly" }), { bitrate: "auto" })
                     .on("finish", () => {
-                        this._player_status = MusicPlayerStatus.READY;
+                        if(this._player_status !== MusicPlayerStatus.TERMINATING && this._player_status !== MusicPlayerStatus.LOCKED){
+                            this._player_status = MusicPlayerStatus.READY;
+                        }
                     });
                     return;
             }
@@ -60,12 +62,17 @@ export class MusicPlayer implements IMusicPlayer {
         throw new Error("Fatal error : now_playing is undefined").stack;
     }
     public skipSong(): boolean {
-        if (this._player_status !== MusicPlayerStatus.IDLE && this._player_status !== MusicPlayerStatus.PAUSED) {
+        if (this._player_status !== MusicPlayerStatus.IDLE) {
             if (this._now_playing?._next != undefined) {
                 this._prevent_worker = true;
-                this._now_playing._song_data.anounce_message?.delete();
+                if(this._player_status === MusicPlayerStatus.PAUSED){
+                    this.resumePlayer();
+                }
+                else{
+                    this.removeAnnounceMessage();
+                }
                 this._now_playing = this._now_playing._next;
-                if (this._player_status === MusicPlayerStatus.PLAYING) {
+                if (this._player_status === MusicPlayerStatus.PLAYING || this._player_status === MusicPlayerStatus.PAUSED) {
                     this._connection?.dispatcher.end();
                 }
                 return true;
@@ -75,9 +82,14 @@ export class MusicPlayer implements IMusicPlayer {
     }
     public stopPlayer(): boolean {
         if (this._player_status !== MusicPlayerStatus.IDLE) {
-            if(this._player_status === MusicPlayerStatus.PLAYING){
-                this._player_status = MusicPlayerStatus.IDLE;
+            if(this._player_status === MusicPlayerStatus.PLAYING && this._player_status === MusicPlayerStatus.PAUSED){
+                this._player_status = MusicPlayerStatus.TERMINATING;
                 this._connection?.dispatcher.end();
+                while(this._now_playing !== undefined){
+                    this.removeAnnounceMessage();
+                    this._now_playing = this._now_playing._next;
+                }
+                this._player_status = MusicPlayerStatus.IDLE;
             }
             else
             {
@@ -93,6 +105,7 @@ export class MusicPlayer implements IMusicPlayer {
     }
     public pauseSong(): boolean {
         if (this._player_status === MusicPlayerStatus.PLAYING) {
+            this.removeAnnounceMessage();
             this._connection?.dispatcher.pause();
             this._player_status = MusicPlayerStatus.PAUSED;
             return true;
@@ -101,6 +114,7 @@ export class MusicPlayer implements IMusicPlayer {
     }
     public resumePlayer(): boolean {
         if (this._player_status === MusicPlayerStatus.PAUSED) {
+            this.removeAnnounceMessage();
             this._connection?.dispatcher.resume();
             this._player_status = MusicPlayerStatus.PLAYING;
             return true;
@@ -108,17 +122,35 @@ export class MusicPlayer implements IMusicPlayer {
         return false;
     }
     public previous(): boolean {
-        if (this._player_status !== MusicPlayerStatus.IDLE && this._player_status !== MusicPlayerStatus.PAUSED) {
+        if (this._player_status !== MusicPlayerStatus.IDLE) {
             if (this._now_playing?._previous != undefined) {
                 this._prevent_worker = true;
-                this._now_playing._song_data.anounce_message?.delete();
+                if(this._player_status === MusicPlayerStatus.PAUSED){
+                    this.resumePlayer();
+                }
+                else{
+                    this.removeAnnounceMessage();
+                }
                 this._now_playing = this._now_playing._previous;
-                if (this._player_status === MusicPlayerStatus.PLAYING) {
+                if (this._player_status === MusicPlayerStatus.PLAYING  || this._player_status === MusicPlayerStatus.PAUSED) {
                     this._connection?.dispatcher.end();
                 }
                 return true;
             }
         }
         return false;
+    }
+    public toggleRepeat()  : boolean {
+        if (this._player_status !== MusicPlayerStatus.IDLE) {
+           this._repeat = !this._repeat;
+           this.removeAnnounceMessage();
+           return true; 
+        }
+        return false;
+    }
+    private removeAnnounceMessage(){
+        if(!this._now_playing?._song_data.anounce_message?.deleted){
+            this._now_playing?._song_data.anounce_message?.delete();
+        }
     }
 }

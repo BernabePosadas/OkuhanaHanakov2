@@ -9,4 +9,5 @@ export interface IMusicControl{
     pause(msg : Message) : void;
     resume(msg : Message) : void;
     back(msg  : Message) : void;
+    repeat(msg : Message) : void;
 }

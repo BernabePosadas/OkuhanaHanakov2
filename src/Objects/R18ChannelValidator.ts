@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { HanakoSpeech } from "./HanakoSpeech";
+import { HanakoSpeech } from "../Models/Static/HanakoSpeech";
 
 export function checkIfR18(msg : Message){
     var isNSFW : any = msg.channel;

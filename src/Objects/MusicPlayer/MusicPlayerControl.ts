@@ -1,7 +1,7 @@
 import { IMusicControl } from "../../Models/Interfaces/IMusicPlayerControl";
 import { Message, VoiceChannel, Permissions, MessageEmbed } from "discord.js";
 import { IMusicPlayer } from "../../Models/Interfaces/IMusicPlayer";
-import { HanakoSpeech } from "../HanakoSpeech";
+import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
 import { isYTURL } from "../YoutubeURLValidator";
 import { YoutubeDataAPI } from "../Data_Source/YoutubeDataAPI";
 import ytdl from "ytdl-core";
@@ -25,7 +25,7 @@ export class MusicPlayerControl implements IMusicControl {
     public async addToQueue(msg: Message): Promise<void> {
         var args: string = msg.content.substring(6).toString().trim();
         const voiceChannel: VoiceChannel | null | undefined = msg.member?.voice.channel;
-        if (voiceChannel === undefined) {
+        if (voiceChannel === null) {
             msg.reply(HanakoSpeech.NOT_IN_VOICE_CHANNEL);
             return;
         }
@@ -41,10 +41,10 @@ export class MusicPlayerControl implements IMusicControl {
                 }
                 if (msg.guild !== null) {
                     if (this.checkForExistingPlayerInstance(msg.guild.id)) {
-                        if(voiceChannel){
+                        if (voiceChannel) {
                             this.createNewPlayerInstance(voiceChannel, msg.guild.id);
                         }
-                        else{
+                        else {
                             throw new Error("voiceChannel is null").stack;
                         }
                     }
@@ -81,33 +81,24 @@ export class MusicPlayerControl implements IMusicControl {
 
     }
     public skip(msg: Message): void {
-        if (msg.guild !== null) {
-            if (this.checkForExistingPlayerInstance(msg.guild.id)) {
-                msg.reply(HanakoSpeech.NO_SONG_PLAYING);
-                return;
-            }
-
-            var player_instance: IMusicPlayer | undefined = this.playerCommonValidationFlow(msg);
-            if (player_instance !== undefined) {
-                if (!player_instance.skipSong()) {
-                    msg.reply(HanakoSpeech.CANNOT_SKIP_FURTHER);
-                    return;
-                }
-                return;
-            }
-        }
-        throw new Error("msg.guild.id is undefined").stack;
+        this.handleOtherMusicCommands(msg, "next");
     }
-    stop(msg: Message): void {
-        throw new Error("Method not implemented.");
+    public stop(msg: Message): void {
+        this.handleOtherMusicCommands(msg, "stop");
     }
-    pause(msg: Message): void {
-        throw new Error("Method not implemented.");
+    public pause(msg: Message): void {
+        this.handleOtherMusicCommands(msg, "pause");
     }
-    resume(msg: Message): void {
-        throw new Error("Method not implemented.");
+    public resume(msg: Message): void {
+        this.handleOtherMusicCommands(msg, "resume");
     }
     public back(msg: Message): void {
+        this.handleOtherMusicCommands(msg, "previous");
+    }
+    public repeat(msg: Message): void {
+        this.handleOtherMusicCommands(msg, "repeat")
+    }
+    private handleOtherMusicCommands(msg: Message, to_handle: string) {
         if (msg.guild !== null) {
             if (this.checkForExistingPlayerInstance(msg.guild.id)) {
                 msg.reply(HanakoSpeech.NO_SONG_PLAYING);
@@ -115,9 +106,45 @@ export class MusicPlayerControl implements IMusicControl {
             }
             var player_instance: IMusicPlayer | undefined = this.playerCommonValidationFlow(msg);
             if (player_instance !== undefined) {
-                if (!player_instance.previous()) {
-                    msg.reply(HanakoSpeech.CANNOT_GO_BACK_FURTHER);
-                    return;
+                switch (to_handle) {
+                    case "previous":
+                        if (!player_instance.previous()) {
+                            msg.reply(HanakoSpeech.CANNOT_GO_BACK_FURTHER);
+                        }
+                        break;
+                    case "next":
+                        if (!player_instance.skipSong()) {
+                            msg.reply(HanakoSpeech.CANNOT_SKIP_FURTHER);
+                        }
+                        break;
+                    case "stop":
+                        if (!player_instance.stopPlayer()) {
+                            throw new Error("Music command failed to execute").stack;
+                        }
+                        break;
+                    case "pause":
+                        if (!player_instance.pauseSong()) {
+                            msg.reply(HanakoSpeech.NO_SONG_TO_PAUSE);
+                            break;
+                        }
+                        if (player_instance._now_playing !== undefined)
+                            player_instance._now_playing._song_data = this.setPlayItemBanner("#0099FF", "Paused" + this.checkIfRepeatIsOn(player_instance), player_instance._now_playing?._song_data, player_instance._now_playing?._song_data.anounce_message);
+                        break;
+                    case "resume":
+                        if (!player_instance.resumePlayer()) {
+                            msg.reply(HanakoSpeech.NO_SONG_TO_RESUME);
+                            break;
+                        }
+                        if (player_instance._now_playing !== undefined)
+                            player_instance._now_playing._song_data = this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), player_instance._now_playing?._song_data, player_instance._now_playing?._song_data.anounce_message);
+                        break;
+                    case "repeat":
+                        player_instance.toggleRepeat();
+                        if (player_instance._now_playing !== undefined)
+                            player_instance._now_playing._song_data = this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), player_instance._now_playing?._song_data, player_instance._now_playing?._song_data.anounce_message);
+                        break;
+                    default:
+                        throw new Error("to_handle value is invalid").stack;
                 }
                 return;
             }
@@ -129,46 +156,40 @@ export class MusicPlayerControl implements IMusicControl {
             return this._player_instance.get(server_id) === undefined;
         }
         throw new Error("server_id is undefined").stack;
-
     }
     private createNewPlayerInstance(voice_channel: VoiceChannel, server_id: string) {
         this._player_instance.set(server_id, new MusicPlayer(voice_channel));
     }
     private setPlayItemBanner(color: string, title: string, play_item: any, msg: Message | undefined): MusicPlayItem {
-        try {
-            if (msg !== undefined) {
-                var songInfoBanner = new MessageEmbed()
-                    .setColor(color)
-                    .setTitle(title)
-                    .setImage(play_item.thumbnail)
-                    .addField(`[${play_item.title}]`, `[View on YouTube](${play_item.youtube_link})`, true);
-                msg.channel.send(songInfoBanner).then(msg => {
-                    play_item.anounce_message = msg;
-                })
-                return play_item;
-            }
-            throw new Error("msg is undefined");
-        } catch (e) {
-            console.log(e);
-            throw e;
+        if (msg !== undefined) {
+            var songInfoBanner = new MessageEmbed()
+                .setColor(color)
+                .setTitle(title)
+                .setImage(play_item.thumbnail)
+                .addField(`[${play_item.title}]`, `[View on YouTube](${play_item.youtube_link})`, true);
+            msg.channel.send(songInfoBanner).then(msg => {
+                play_item.anounce_message = msg;
+            })
+            return play_item;
         }
+        throw new Error("msg is undefined");
     }
     private playerCommonValidationFlow(msg: Message): IMusicPlayer | undefined {
         if (msg.guild !== null) {
-        var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
-        if (player_instance !== undefined) {
-            if (this.checkIfDifferentVoiceChannel(player_instance._voice_channel, msg.member?.voice.channel)) {
-                return player_instance;
+            var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
+            if (player_instance !== undefined) {
+                if (this.checkIfDifferentVoiceChannel(player_instance._voice_channel, msg.member?.voice.channel)) {
+                    return player_instance;
+                }
+                else {
+                    msg.reply(HanakoSpeech.NOT_IN_SAME_VOICE_CHANNEL);
+                }
             }
             else {
-                msg.reply(HanakoSpeech.NOT_IN_SAME_VOICE_CHANNEL);
+                throw new Error("player_instance is undefined").stack;
             }
         }
-        else {
-            throw new Error("player_instance is undefined").stack;
-        }
-    }
-    throw new Error("msg.guild is undefined").stack;
+        throw new Error("msg.guild is undefined").stack;
     }
     private checkIfRepeatIsOn(player_instance: IMusicPlayer): string {
         if (player_instance._repeat) {
@@ -186,7 +207,8 @@ export class MusicPlayerControl implements IMusicControl {
                     this._player_instance.delete(key);
                 }
                 if (value._player_status === MusicPlayerStatus.READY) {
-                    if(!value._prevent_worker){
+                    value._player_status = MusicPlayerStatus.LOCKED;
+                    if (!value._prevent_worker) {
                         value._now_playing?._song_data.anounce_message?.delete();
                     }
                     if (!value._prevent_worker && !value._repeat) {
@@ -194,7 +216,7 @@ export class MusicPlayerControl implements IMusicControl {
                             value._now_playing = value._now_playing._next;
                         }
                         else {
-                            value.stopPlayer();
+                            await value.stopPlayer();
                             return;
                         }
                     }
@@ -207,10 +229,9 @@ export class MusicPlayerControl implements IMusicControl {
                         }
                         value._now_playing = now_playing;
                     }
-                    if(value._now_playing?._song_data.queued){
+                    if (value._now_playing?._song_data.queued) {
                         value._now_playing?._song_data.anounce_message?.delete();
                     }
-                    console.log("passes here");
                     await value.playSong();
                 }
             });
@@ -219,7 +240,7 @@ export class MusicPlayerControl implements IMusicControl {
 
 }
 
-async function musicPlayerControlWorker(){
+async function musicPlayerControlWorker() {
     let MusicPlayerControlWorker = container.get<MusicPlayerControl>(TYPES.MusicPlayerControl);
     await MusicPlayerControlWorker.worker();
 }

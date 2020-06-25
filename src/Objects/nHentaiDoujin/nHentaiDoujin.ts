@@ -1,6 +1,6 @@
 import { nHentai } from "../Data_Source/nHentai";
 import { Message, MessageEmbed } from "discord.js";
-import { HanakoSpeech } from "../HanakoSpeech";
+import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
 import { checkIfR18 } from "../R18ChannelValidator";
 
 export class nHentaiDoujin{
