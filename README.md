@@ -1,6 +1,7 @@
 <img width="200" height="200" align="left" style="float: left; margin: 0 10px 0 0;object-fit:contain" alt="Okuhana Hanako" src="https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanakov2/clumsy_hanako/images/hanako_portrait.png">  
 
 # Okuhana Hanako
+
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/29ba8ef53cca42bda4cbe9729f22fa89)](https://www.codacy.com/manual/BernabePosadas/OkuhanaHanako?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BernabePosadas/OkuhanaHanako&amp;utm_campaign=Badge_Grade)
 [![Build status](https://ci.appveyor.com/api/projects/status/5rmvkqj84j6ml5xs/branch/clumsy_hanako?svg=true)](https://ci.appveyor.com/project/BernabePosadas/okuhanahanakov/branch/clumsy_hanako)
 [![GitHub license](https://img.shields.io/github/license/BernabePosadas/OkuhanaHanakov2)](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/clumsy_hanako/LICENSE)
