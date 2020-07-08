@@ -34,7 +34,6 @@ export class Danbooru {
         return this.beginSearch(search_from, query);
     }
     private async beginSearch(search_from: string, query : string) : Promise<DanbooruPost>{
-        console.log(search_from);
         switch (search_from) {
             case "danbooru":
                 var image: DanbooruPost = { danbooru_link : await this.requestGETPostsDanbooru(query, Buffer.from(this._aunth_header).toString('base64')) };

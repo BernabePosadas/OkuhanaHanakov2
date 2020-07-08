@@ -233,11 +233,11 @@ export class MusicPlayerControl implements IMusicControl {
                         value._now_playing?._song_data.anounce_message?.delete();
                     }
                     if (!value._prevent_worker && !value._repeat) {
-                        if (value._now_playing?._next != undefined) {
+                        if (value._now_playing?._next !== undefined) {
                             value._now_playing = value._now_playing._next;
                         }
                         else {
-                            await value.stopPlayer();
+                            value.stopPlayer();
                             return;
                         }
                     }

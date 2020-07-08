@@ -82,12 +82,13 @@ export class MusicPlayer implements IMusicPlayer {
     }
     public stopPlayer(): boolean {
         if (this._player_status !== MusicPlayerStatus.IDLE) {
-            if(this._player_status === MusicPlayerStatus.PLAYING && this._player_status === MusicPlayerStatus.PAUSED){
+            if(this._player_status === MusicPlayerStatus.PLAYING || this._player_status === MusicPlayerStatus.PAUSED){
                 this._player_status = MusicPlayerStatus.TERMINATING;
                 this._connection?.dispatcher.end();
-                while(this._now_playing !== undefined){
-                    this.removeAnnounceMessage();
+                this.removeAnnounceMessage();
+                while(this._now_playing?._next !== undefined){
                     this._now_playing = this._now_playing._next;
+                    this.removeAnnounceMessage();
                 }
                 this._player_status = MusicPlayerStatus.IDLE;
             }
