@@ -37,18 +37,6 @@ client.on("ready", () => {
     ]
     HanakoArrows = new DanbooruImageRandomizer.HanakoArrows(client, Decks);
     nHentaiDoujinViewer = new nHentai.nHentaiViewer();
-    /* pixiv basic search 
-    const word = "クレセント(アズールレーン)";
-    var returnobj = pixiv.login("user_tupx2577", process.env.PixivPassword).then(() => {
-        return pixiv.searchIllust(word).then(json => {
-            console.log(json);
-            return pixiv.requestUrl(json.next_url);
-        }).then(json => {
-            console.log(json); //next results
-        });
-    });
-    console.log(returnobj)
-    */
 })
 client.once("reconnecting", () => {
     console.log("Reconnecting!");
@@ -217,7 +205,7 @@ function setActivity(display, activity_type) {
 }
 //endregion
 
-client.login(process.env.token);
+client.login(process.env.TOKEN);
 //endregion
 
 

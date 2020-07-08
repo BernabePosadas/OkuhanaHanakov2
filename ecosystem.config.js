@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    name: 'Okuhana Hanako',
-    script: './bot.js'
+    name: 'okuhana-hanako',
+    script: './src/index.js'
   }]
 };
