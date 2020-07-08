@@ -1,9 +1,9 @@
-<img width="200" height="200" align="left" style="float: left; margin: 0 10px 0 0;object-fit:contain" alt="Okuhana Hanako" src="https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanakov2/master/images/hanako_portrait.png">  
+<img width="200" height="200" align="left" style="float: left; margin: 0 10px 0 0;object-fit:contain" alt="Okuhana Hanako" src="https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanakov2/clumsy_hanako/images/hanako_portrait.png">  
 
 # Okuhana Hanako
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b75ff93fa7e4846a80e0dd96e08492f)](https://app.codacy.com/manual/BernabePosadas/OkuhanaHanakov2?utm_source=github.com&utm_medium=referral&utm_content=BernabePosadas/OkuhanaHanakov2&utm_campaign=Badge_Grade_Dashboard)
-[![Build status](https://ci.appveyor.com/api/projects/status/5rmvkqj84j6ml5xs/branch/master?svg=true)](https://ci.appveyor.com/project/BernabePosadas/okuhanahanakov2/branch/master)
-[![GitHub license](https://img.shields.io/github/license/BernabePosadas/OkuhanaHanakov2)](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/master/LICENSE)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/29ba8ef53cca42bda4cbe9729f22fa89)](https://www.codacy.com/manual/BernabePosadas/OkuhanaHanako?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BernabePosadas/OkuhanaHanako&amp;utm_campaign=Badge_Grade)
+[![Build status](https://ci.appveyor.com/api/projects/status/5rmvkqj84j6ml5xs/branch/clumsy_hanako?svg=true)](https://ci.appveyor.com/project/BernabePosadas/okuhanahanakov/branch/clumsy_hanako)
+[![GitHub license](https://img.shields.io/github/license/BernabePosadas/OkuhanaHanakov2)](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/clumsy_hanako/LICENSE)
 [![HitCount](http://hits.dwyl.com/BernabePosadas/OkuhanaHanakov2.svg)](http://hits.dwyl.com/BernabePosadas/OkuhanaHanakov2)
 
 A Discord Bot that i created for practicing coding in node and discord js API. 
@@ -59,5 +59,5 @@ A Discord Bot that i created for practicing coding in node and discord js API.
   recipient) and go on for an adventure to the Internet World(when doing a HTTP request).
 
 ## License 
- [MIT License](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/master/LICENSE)  
+ [MIT License](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/clumsy_hanako/LICENSE)  
 
