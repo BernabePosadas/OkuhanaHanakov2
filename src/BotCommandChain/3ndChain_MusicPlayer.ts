@@ -1,12 +1,15 @@
-import { CommandChain } from "../../Models/Interfaces/CommandChain";
+import { CommandChain } from "../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
-import { MusicPlayerControl } from "../MusicPlayer/MusicPlayerControl";
-import { IMusicControl } from "../../Models/Interfaces/IMusicPlayerControl";
+import { MusicPlayerControl } from "../Objects/MusicPlayer/MusicPlayerControl";
+import { IMusicControl } from "../Models/Interfaces/IMusicPlayerControl";
+import container from "../inversify.config";
+import { TYPES } from "../types";
+import { BotMiscCommandChain } from "./4thChain_Misc";
 
 export class MusicPlayerCommandChain implements CommandChain{
     private _music_player_control : IMusicControl;
-    constructor(music_player_control : MusicPlayerControl){
-        this._music_player_control = music_player_control;
+    constructor(){
+        this._music_player_control = container.get<MusicPlayerControl>(TYPES.MusicPlayerControl);
     }
     public executeChain(msg : Message, command : string){
         switch (command) { 
@@ -32,7 +35,8 @@ export class MusicPlayerCommandChain implements CommandChain{
                 this._music_player_control.repeat(msg);
                 break;
             default:
-                msg.reply("Ano.. sumimasen, I did not catch your command. Is there something you like to request?");
+                var CommandChain3rd : CommandChain = new BotMiscCommandChain();
+                CommandChain3rd.executeChain(msg, command);
                 break;
         }
     }

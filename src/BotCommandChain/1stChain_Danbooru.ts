@@ -1,12 +1,21 @@
-import { CommandChain } from "../../Models/Interfaces/CommandChain";
+//************************************************************************************/
+//   The object `Bow` is simply the object that handle danbooru random image search.  /
+//   I name it even though the name is irrelevant as to better imagine the bot        /
+//   actions as representing my OC character `Okuhana Hanako`.                        /
+//                                                                                    /
+//************************************************************************************/
+
+import { CommandChain } from "../Models/Interfaces/CommandChain";
 import { Message } from "discord.js";
-import { Bow } from "../DanbooruImageRandomizer/Bow";
+import { Bow } from "../Objects/DanbooruImageRandomizer/Bow";
 import { nHentaiCommandChain } from "./2ndChain_nHentai";
+import container from "../inversify.config";
+import { TYPES } from "../types";
 
 export class DanbooruCommandChain implements CommandChain{
     private _bow : Bow;
-    constructor(bow : Bow){
-       this._bow = bow;
+    constructor(){
+       this._bow = container.get<Bow>(TYPES.Bow);
     } 
     public executeChain(msg : Message, command : string){
         switch (command) { 

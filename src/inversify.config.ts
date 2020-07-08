@@ -20,5 +20,6 @@ container.bind<Danbooru>(TYPES.Danbooru).to(Danbooru).inSingletonScope();
 container.bind<Quiver>(TYPES.Quiver).to(Quiver).inSingletonScope();
 container.bind<Bow>(TYPES.Bow).to(Bow).inSingletonScope(); 
 container.bind<MusicPlayerControl>(TYPES.MusicPlayerControl).to(MusicPlayerControl).inSingletonScope();
+container.bind<string | undefined>(TYPES.Command_Prefix).toConstantValue(process.env.COMMAND_PREFIX);
 
 export default container;

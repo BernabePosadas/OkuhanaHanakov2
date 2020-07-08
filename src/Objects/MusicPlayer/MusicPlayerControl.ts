@@ -1,3 +1,10 @@
+//*******************************************************************************/
+//   Music Player Control                                                        /
+//   Only control validation and command issuing to player instances are here.   /
+//   For player workflow, Look for MusicPlayer class.                            /   
+//                                                                               /
+//*******************************************************************************/
+
 import { IMusicControl } from "../../Models/Interfaces/IMusicPlayerControl";
 import { Message, VoiceChannel, Permissions, MessageEmbed } from "discord.js";
 import { IMusicPlayer } from "../../Models/Interfaces/IMusicPlayer";
@@ -18,10 +25,14 @@ import container from "../../inversify.config";
 export class MusicPlayerControl implements IMusicControl {
     public _player_instance: Map<string, MusicPlayer>;
     public _youtube_data_api: YoutubeDataAPI;
+    private _background_worker : any;
+
     constructor() {
         this._youtube_data_api = new YoutubeDataAPI();
         this._player_instance = new Map<string, MusicPlayer>();
+        this._background_worker = null;
     }
+
     public async addToQueue(msg: Message): Promise<void> {
         var args: string = msg.content.substring(6).toString().trim();
         const voiceChannel: VoiceChannel | null | undefined = msg.member?.voice.channel;
@@ -63,9 +74,13 @@ export class MusicPlayerControl implements IMusicControl {
                     var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
                     if (player_instance !== undefined) {
                         if (player_instance._player_status === MusicPlayerStatus.IDLE) {
-                            await player_instance.addToQueue(this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), play_item, msg));
-                            await player_instance.playSong();
-                            setInterval(musicPlayerControlWorker, 1000);
+                            if(await player_instance.addToQueue(this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), play_item, msg))){
+                                await player_instance.playSong();
+                                this._background_worker = setInterval(musicPlayerControlWorker, 1000);
+                            }
+                            else{
+                                throw new Error(`Failed to start a player instance. Voice Channel ID :  ${voiceChannel?.id} `).stack;
+                            }
                         }
                         else {
                             play_item.queued = true;
@@ -128,7 +143,7 @@ export class MusicPlayerControl implements IMusicControl {
                             break;
                         }
                         if (player_instance._now_playing !== undefined)
-                            player_instance._now_playing._song_data = this.setPlayItemBanner("#0099FF", "Paused" + this.checkIfRepeatIsOn(player_instance), player_instance._now_playing?._song_data, player_instance._now_playing?._song_data.anounce_message);
+                            player_instance._now_playing._song_data = this.setPlayItemBanner("#0099FF", "Paused", player_instance._now_playing?._song_data, player_instance._now_playing?._song_data.anounce_message);
                         break;
                     case "resume":
                         if (!player_instance.resumePlayer()) {
@@ -200,8 +215,14 @@ export class MusicPlayerControl implements IMusicControl {
     private checkIfDifferentVoiceChannel(voice_channel_player_instance: VoiceChannel | null, voice_channel_joined: VoiceChannel | null | undefined) {
         return voice_channel_player_instance === voice_channel_joined;
     }
+
+    //this is used for scheduled run task for every 1s. does not start immediately only when there is music player instance
     public async worker() {
         if (this._player_instance !== undefined) {
+            if(this._player_instance.size === 0){
+                clearInterval(this._background_worker);
+                return;
+            }
             this._player_instance.forEach(async (value, key, map) => {
                 if (value._remove_instance) {
                     this._player_instance.delete(key);
@@ -240,6 +261,7 @@ export class MusicPlayerControl implements IMusicControl {
 
 }
 
+// this is the class backround worker
 async function musicPlayerControlWorker() {
     let MusicPlayerControlWorker = container.get<MusicPlayerControl>(TYPES.MusicPlayerControl);
     await MusicPlayerControlWorker.worker();

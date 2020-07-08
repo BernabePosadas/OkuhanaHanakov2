@@ -48,17 +48,16 @@ export class Danbooru {
         const response = await fetch(`https://danbooru.donmai.us/posts.json?${query}`, { headers: { Authorization: "Basic " + header } }).then(checkError).then((response) => response.json());
         if (Object.keys(response).length) {
             return `https://danbooru.donmai.us/posts/${response[0].id}`;
-        } else {
-            return "no data";
-        }
+        } 
+        return "no data";
     }
 
     private async requestGETPostsSafebooru(query: string, header: string): Promise<string> {
         const response = await fetch(`https://safebooru.donmai.us/posts.json?${query}`, { headers: { Authorization: "Basic " + header } }).then(checkError).then((response) => response.json());
         if (Object.keys(response).length) {
             return `https://safebooru.donmai.us/posts/${response[0].id}`;
-        } else {
-            return "no data";
-        }
+        } 
+        return "no data";
+
     }
 }

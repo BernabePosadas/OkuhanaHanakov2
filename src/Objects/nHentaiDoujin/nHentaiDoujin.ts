@@ -2,13 +2,17 @@ import { nHentai } from "../Data_Source/nHentai";
 import { Message, MessageEmbed } from "discord.js";
 import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
 import { checkIfR18 } from "../R18ChannelValidator";
+import container from "../../inversify.config";
+import { TYPES } from "../../types";
 
 export class nHentaiDoujin{
     private _nhentai : nHentai;
     private _doujin : any;
     private _ext : string = "";
+    private _command_prefix : string | undefined;
     constructor(){
         this._nhentai = new nHentai();
+        this._command_prefix = container.get(TYPES.Command_Prefix);
     }
     public async searchAndServeDoujin(msg : Message, tagOnly : boolean){
         if(!checkIfR18(msg)){
@@ -50,7 +54,7 @@ export class nHentaiDoujin{
             return "none";
         }
         else if (tagList.length >= 1000) {
-            return `Unable to display tag due to character limit. Please Type !doujintags ${this._doujin.id} to view`;
+            return `Unable to display tag due to character limit. Please Type \`${this._command_prefix}doujintags ${this._doujin.id}\` to view`;
         }
         return tagList.trim();
     }
