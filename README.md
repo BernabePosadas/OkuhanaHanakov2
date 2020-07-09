@@ -38,19 +38,8 @@ A Discord Bot that i created for practicing coding in node and discord js API.
    - `!launchnuke <code>` - will display nHentai doujin basic information when given a nHenati doujin ID(or weebs call it nuke codes) 
    - `!help` - a quick guide on the bot and its capabilities 
 ## What is my motivation to create this? 
-  To gave myself an excercise to code and to automate fetching `abigail williams` photo to be sent to Mark. 
+  To gave myself an excercise to code and to automate fetching [abigail williams](https://fategrandorder.fandom.com/wiki/Abigail_Williams) photo to be sent to Mark. 
 
-## What are the dependency/package used?
-  - for the whole software
-    - discord.js 
-  - Danbooru Random Image Fetcher
-    - the APIs folder specifically danbooru.js
-  - YouTube Music Player
-    -  the APIs folder specifically YTSearchApi.js
-    - ffmpeg
-    - opus(if required)
-  - APIs folder
-    - node-fetch 
  
 ## So many cringy weaboo shenanigans. Why you choose to include that mess for bot replies? 
    Why not? 
