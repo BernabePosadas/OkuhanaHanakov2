@@ -18,15 +18,17 @@
     "node-opus": "^0.3.3",
     "pixiv-api-client": "^0.22.0",
     "reflect-metadata": "^0.1.13",
+    "typescript": "^3.9.6",
     "ytdl-core": "^2.1.7"
   },
   "engines": {
     "node": "13.x"
   },
   "scripts": {
-    "start": "node bot.js",
+    "start": "node ./src/index.js",
     "watch": "tsc -p tsconfig.json -w",
     "build": "tsc"
+
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
