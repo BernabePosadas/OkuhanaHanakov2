@@ -17,7 +17,7 @@ export class MiscCommand {
         this.createMyCapabilities("Danbooru/Safebooru Random Image Fetcher", DanbooruImageCommandsDefault, msg);
     }
     this.createMyCapabilities("YouTube Music Player", `\`!play <title>\` plays a song from YouTube. Alternatively you can put the URL on \`<title>\`\n\`!skip\` skips a song\n\`!stop\` stop and wipes all song in queue\n\`!pause\` pause the current song\n\`!resume\` resume paused song\n\`!togglerepeat\` toggles current song repeat status`, msg);
-    this.createMyCapabilities("Nutaku Nuke Launcher", `\`!launchnuke <code>\` finds a nutaku doujin with the id \`<code>\``, msg);
+    this.createMyCapabilities("nHentai Nuke Launcher", `\`!launchnuke <code>\` finds a nHentai doujin with the id \`<code>\`\n\`!doujintags <code>\` View all tags of the doujin specified by <code>`, msg);
 }
 private createMyCapabilities(header : string, content : string, msg : Message) {
     var HelpBanner : MessageEmbed = new MessageEmbed()
