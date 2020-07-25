@@ -95,13 +95,13 @@ export class Quiver{
     public async pickAnArrow(person_to_shoot : string) : Promise<DanbooruPost>{
         switch(person_to_shoot){
             case "bernabe": 
-                return this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._bernabe_arrows), "danbooru");
+                return await this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._bernabe_arrows), "danbooru");
             case "mark" :
-                return this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._mark_arrows), "danbooru");
+                return await this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._mark_arrows), "danbooru");
             case "ivan" : 
-                return this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._ivan_arrows), "danbooru");
+                return await this._danbooru.fetchRandomImage(Shuffler.shuffleAndPickFromArray(this._ivan_arrows), "danbooru");
             case "chino" :
-                return this._danbooru.fetchRandomImage("kafuu_chino", "danbooru");
+                return await this._danbooru.fetchRandomImage("kafuu_chino", "danbooru");
             default :
                 throw new Error("there is no task for person_to_shoot case : " + person_to_shoot);
         }

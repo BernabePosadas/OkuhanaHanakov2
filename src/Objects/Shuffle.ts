@@ -16,6 +16,10 @@ export class Shuffler {
             array[currentIndex] = array[randomIndex];
             array[randomIndex] = temporaryValue;
         }
-        return array[Math.floor(Math.random() * array.length)];
+        var result : number = Math.floor(Math.random() * array.length);
+        if(result >= array.length){              // safe keeping for index out of bounds exception 
+            result--;
+        }
+        return array[result];
     }
 }

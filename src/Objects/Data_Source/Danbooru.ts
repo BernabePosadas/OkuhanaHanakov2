@@ -22,7 +22,7 @@ export class Danbooru {
             page: "1",
             random: "true"
         });
-        return this.beginSearch(search_from, query);
+        return await this.beginSearch(search_from, query);
     }
     public async fetchRandomImageGeneric(tag_list: string, search_from: string): Promise<DanbooruPost> {
         const query: string = querystring.stringify({
@@ -36,10 +36,12 @@ export class Danbooru {
     private async beginSearch(search_from: string, query : string) : Promise<DanbooruPost>{
         switch (search_from) {
             case "danbooru":
-                var image: DanbooruPost = { danbooru_link : await this.requestGETPostsDanbooru(query, Buffer.from(this._aunth_header).toString('base64')) };
+                var link = await this.requestGETPostsDanbooru(query, Buffer.from(this._aunth_header).toString('base64'));
+                var image: DanbooruPost = { danbooru_link : link };
                 return image;
             default:
-                var image: DanbooruPost = { danbooru_link : await this.requestGETPostsSafebooru(query, Buffer.from(this._aunth_header).toString('base64')) };
+                var link = await this.requestGETPostsSafebooru(query, Buffer.from(this._aunth_header).toString('base64'));
+                var image: DanbooruPost = { danbooru_link : link };
                 return image;
         }
     }
