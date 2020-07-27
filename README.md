@@ -3,7 +3,7 @@
 # Okuhana Hanako
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/29ba8ef53cca42bda4cbe9729f22fa89)](https://www.codacy.com/manual/BernabePosadas/OkuhanaHanako?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=BernabePosadas/OkuhanaHanako&amp;utm_campaign=Badge_Grade)
-[![Build status](https://ci.appveyor.com/api/projects/status/afp6cat9tmuybasl?svg=true)](https://ci.appveyor.com/project/BernabePosadas/okuhanahanako)
+[![Build Status](https://travis-ci.com/BernabePosadas/OkuhanaHanako.svg?branch=clumsy_hanako)](https://travis-ci.com/BernabePosadas/OkuhanaHanako)
 [![GitHub license](https://img.shields.io/github/license/BernabePosadas/OkuhanaHanakov2)](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/clumsy_hanako/LICENSE)
 [![HitCount](http://hits.dwyl.com/BernabePosadas/OkuhanaHanakov2.svg)](http://hits.dwyl.com/BernabePosadas/OkuhanaHanakov2)
 
