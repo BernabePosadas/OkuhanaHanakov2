@@ -1,5 +1,5 @@
 install:
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node 13.8.0 x86
 build_script: 
-  - npm install -g typescript
-  - npm build
+  - npm install
+  - npm run build
