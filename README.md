@@ -1,4 +1,4 @@
-<img width="200" height="200" align="left" style="float: left; margin: 0 10px 0 0;object-fit:contain" alt="Okuhana Hanako" src="https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanakov2/clumsy_hanako/images/hanako_portrait.png">  
+<img width="250" height="250" align="left" style="float: left; margin: 0 10px 0 0;object-fit:contain" alt="Okuhana Hanako" src="https://raw.githubusercontent.com/BernabePosadas/OkuhanaHanakov2/clumsy_hanako/images/hanako_portrait.png">  
 
 # Okuhana Hanako
 
@@ -7,8 +7,10 @@
 [![GitHub license](https://img.shields.io/github/license/BernabePosadas/OkuhanaHanakov2)](https://github.com/BernabePosadas/OkuhanaHanakov2/blob/clumsy_hanako/LICENSE)
 [![HitCount](http://hits.dwyl.com/BernabePosadas/OkuhanaHanakov2.svg)](http://hits.dwyl.com/BernabePosadas/OkuhanaHanakov2)
 
-A Discord Bot that i created for practicing coding in node and discord js API. 
-<br/><br/><br/>
+A Discord Bot that i created for practicing coding in node and discord js API. <br/><br/>
+<b>NOTE!</b><br/>
+Currently it set only to be invited by me only. I may or may not set it for public use in the future. 
+<br/><br/>
 
 ## Bot Capabilites
 
