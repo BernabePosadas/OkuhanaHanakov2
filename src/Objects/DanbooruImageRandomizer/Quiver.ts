@@ -103,7 +103,7 @@ export class Quiver{
             case "chino" :
                 return await this._danbooru.fetchRandomImage("kafuu_chino", "danbooru");
             default :
-                throw new Error("there is no task for person_to_shoot case : " + person_to_shoot);
+                throw new Error("there is no task for person_to_shoot case : " + person_to_shoot).stack;
         }
     }
     public async genericDanbooruRandomImageSearch(tags : string, searchFrom : string) : Promise<DanbooruPost>{

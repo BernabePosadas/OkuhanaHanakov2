@@ -17,22 +17,22 @@ export class MusicPlayerCommandChain implements CommandChain{
                 this._music_player_control.addToQueue(msg);
                 break;
             case "skip":
-                this._music_player_control.skip(msg);
+                this._music_player_control.handleOtherMusicCommands(msg, "next");
                 break;
             case "stop":
-                this._music_player_control.stop(msg);
+                this._music_player_control.handleOtherMusicCommands(msg, "stop");
                 break;
             case "pause":
-                this._music_player_control.pause(msg);
+                this._music_player_control.handleOtherMusicCommands(msg, "pause");
                 break;
             case "resume":
-                this._music_player_control.resume(msg);
+                this._music_player_control.handleOtherMusicCommands(msg, "resume");
                 break;
             case "back":
-                this._music_player_control.back(msg);
+                this._music_player_control.handleOtherMusicCommands(msg, "previous");
                 break;
             case "togglerepeat":
-                this._music_player_control.repeat(msg);
+                this._music_player_control.handleOtherMusicCommands(msg, "repeat");
                 break;
             default:
                 var CommandChain3rd : CommandChain = new BotMiscCommandChain();

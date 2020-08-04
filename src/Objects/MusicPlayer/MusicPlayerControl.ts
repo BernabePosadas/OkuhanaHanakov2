@@ -95,25 +95,7 @@ export class MusicPlayerControl implements IMusicControl {
         }
 
     }
-    public skip(msg: Message): void {
-        this.handleOtherMusicCommands(msg, "next");
-    }
-    public stop(msg: Message): void {
-        this.handleOtherMusicCommands(msg, "stop");
-    }
-    public pause(msg: Message): void {
-        this.handleOtherMusicCommands(msg, "pause");
-    }
-    public resume(msg: Message): void {
-        this.handleOtherMusicCommands(msg, "resume");
-    }
-    public back(msg: Message): void {
-        this.handleOtherMusicCommands(msg, "previous");
-    }
-    public repeat(msg: Message): void {
-        this.handleOtherMusicCommands(msg, "repeat")
-    }
-    private handleOtherMusicCommands(msg: Message, to_handle: string) {
+    public handleOtherMusicCommands(msg: Message, to_handle: string) {
         if (msg.guild !== null) {
             if (this.checkForExistingPlayerInstance(msg.guild.id)) {
                 msg.reply(HanakoSpeech.NO_SONG_PLAYING);
@@ -134,7 +116,7 @@ export class MusicPlayerControl implements IMusicControl {
                         break;
                     case "stop":
                         if (!player_instance.stopPlayer()) {
-                            throw new Error("Music command failed to execute").stack;
+                            throw new Error("Music command failed to execute : " + to_handle).stack;
                         }
                         break;
                     case "pause":
@@ -164,7 +146,7 @@ export class MusicPlayerControl implements IMusicControl {
                 return;
             }
         }
-        throw new Error("msg.guild.id is undefined");
+        throw new Error("msg.guild.id is undefined").stack;
     }
     private checkForExistingPlayerInstance(server_id: string | null): boolean {
         if (server_id !== null) {
@@ -187,7 +169,7 @@ export class MusicPlayerControl implements IMusicControl {
             })
             return play_item;
         }
-        throw new Error("msg is undefined");
+        throw new Error("msg is undefined").stack;
     }
     private playerCommonValidationFlow(msg: Message): IMusicPlayer | undefined {
         if (msg.guild !== null) {
@@ -260,7 +242,6 @@ export class MusicPlayerControl implements IMusicControl {
     }
 
 }
-
 // this is the class backround worker
 async function musicPlayerControlWorker() {
     let MusicPlayerControlWorker = container.get<MusicPlayerControl>(TYPES.MusicPlayerControl);

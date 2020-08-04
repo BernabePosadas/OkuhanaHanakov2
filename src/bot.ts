@@ -4,7 +4,7 @@ import { TYPES } from "./types";
 import { TheWeebsDiscordID } from "./Models/Static/TheWeebsDiscordIDs";
 import { DanbooruCommandChain } from "./BotCommandChain/1stChain_Danbooru";
 import { CommandChain } from "./Models/Interfaces/CommandChain";
-
+import { SurfaceLevelExceptionHandler } from "./Objects/SurfaceLevelExceptionHandler";
 @injectable()
 export class Hanako {
     private _client: Client;
@@ -22,6 +22,7 @@ export class Hanako {
         this._prefix = prefix;
     }
     public start(): Promise<string> {
+
         //Hanako's Task List
         this.lisenToMessage();
 
@@ -32,23 +33,32 @@ export class Hanako {
 
         //Readies herself and log to discord.
         return this._client.login(this._token);
+
     }
     private lisenToMessage() {
+
         var prefix: string | undefined = this._prefix;
         this._client.on("message", async (msg: Message) => {
-            if (prefix !== undefined) {
-                if (!msg.content.startsWith(prefix) || msg.author.bot) {
-                    return;
+            try {
+                if (prefix !== undefined) {
+                    if (!msg.content.startsWith(prefix) || msg.author.bot) {
+                        return;
+                    }
+                    else if (msg.author.id != TheWeebsDiscordID.bernabe && this._maintenance) {
+                        msg.reply("Sumimasen, Im currently on training with my master");
+                    }
+                    const args: Array<string> = msg.content.slice(prefix.length).split(/ +/);
+                    const command: string = args[0].toLowerCase();
+                    var CommandChain: CommandChain = new DanbooruCommandChain();
+                    CommandChain.executeChain(msg, command);
                 }
-                else if (msg.author.id != TheWeebsDiscordID.bernabe && this._maintenance) {
-                    msg.reply("Sumimasen, Im currently on training with my master");
-                }
-                const args: Array<string> = msg.content.slice(prefix.length).split(/ +/);
-                const command: string = args[0].toLowerCase();
-                var CommandChain: CommandChain = new DanbooruCommandChain();
-                CommandChain.executeChain(msg, command);
+            }
+            catch (ex) {
+                SurfaceLevelExceptionHandler.writeToFile(ex);
             }
         });
+
+
     }
 
     public setActivity(activity_type: string, activity: string) {
@@ -65,7 +75,7 @@ export class Hanako {
             this._client.user?.setActivity(activity, { type: "WATCHING" });
         }
         else {
-            throw new Error("Unknown Activity type");
+            throw new Error("Unknown Activity type").stack;
         }
 
     }

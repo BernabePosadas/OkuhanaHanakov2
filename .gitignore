@@ -4,3 +4,4 @@
 /src/*/*/*.js
 /src/*/*/*/*.js
 .env
+/logs/exception_stack_trace.txt
