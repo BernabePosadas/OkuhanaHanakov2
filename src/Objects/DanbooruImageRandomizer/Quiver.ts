@@ -27,18 +27,20 @@ export class Quiver{
             "heliotrope_(flower_knight_girl)",
             "flandre_scarlet",
             "nepgear", 
-            "kyouka_(princess_connect!)"
+            "kyouka_(princess_connect!)", 
+            "nobeta"
         ];
         var probabilities : Array<number> = [
-            100, // 50 % of 200 collections 
-            2, // 1 %
-            2, // 1 % 
-            2, // 1 %
-            2, // 1 %
-            2, // 1 %
-            40, // 20 %
-            20, // 10 %
-            30  // 15%
+            45, // 45 % 
+            1,  // 1 %
+            1,  // 1 % 
+            1,  // 1 %
+            1,  // 1 %
+            1,  // 1 %
+            20, // 20 %
+            10, // 10 %
+            15, // 15%
+            5   // 5 %
         ];
         this._bernabe_arrows = this.produceArrows(candidates, probabilities);
 
@@ -48,8 +50,8 @@ export class Quiver{
             "kokkoro_(princess_connect!) "
         ];
         probabilities = [
-            6, // 60 % of 10 collections 
-            4 // 40%  
+            3, // 60 % 
+            2 // 40%  
         ];
         this._mark_arrows = this.produceArrows(candidates, probabilities);
 
@@ -67,16 +69,16 @@ export class Quiver{
             "purple_heart"
         ];
         probabilities = [
-            2, // 1% of 20 collections 
-            2, // 1%
-            2, // 1%
-            2, // 1%
-            60, // 30%
-            20, // 10%
-            40, // 20%
-            20, // 10%
-            20, // 10%
-            32 // 16%
+            1, // 1% 
+            1, // 1%
+            1, // 1%
+            1, // 1%
+            30, // 30%
+            10, // 10%
+            20, // 20%
+            10, // 10%
+            10, // 10%
+            16 // 16%
         ];
         this._ivan_arrows = this.produceArrows(candidates, probabilities);
     
