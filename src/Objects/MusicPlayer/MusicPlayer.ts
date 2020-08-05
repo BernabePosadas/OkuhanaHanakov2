@@ -5,6 +5,8 @@ import { YoutubeMusicPlaylist } from "../../Models/YoutubeMusicPlaylist";
 import { MusicPlayItem } from "../../Models/Interfaces/MusicPlayItem";
 import { VoiceConnection, VoiceChannel } from "discord.js";
 import ytdl from "ytdl-core";
+import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
+import { SurfaceLevelExceptionHandler } from "../SurfaceLevelExceptionHandler";
 
 
 export class MusicPlayer implements IMusicPlayer {
@@ -47,13 +49,22 @@ export class MusicPlayer implements IMusicPlayer {
         this._prevent_worker= false;
         if (this._now_playing != undefined) {
             if (this._now_playing?._song_data != undefined) {
-                this._player_status = MusicPlayerStatus.PLAYING;
-                this._now_playing._song_data.queued = false;
+                
                 this._connection?.play(ytdl(this._now_playing._song_data.youtube_link, { filter: "audioonly" }), { bitrate: "auto" })
+                    .on("start", () =>{
+                        this._player_status = MusicPlayerStatus.PLAYING;
+                        if (this._now_playing?._song_data != undefined) {
+                            this._now_playing._song_data.queued = false;
+                        }
+                    })
                     .on("finish", () => {
                         if(this._player_status !== MusicPlayerStatus.TERMINATING && this._player_status !== MusicPlayerStatus.LOCKED){
                             this._player_status = MusicPlayerStatus.READY;
                         }
+                    })
+                    .on("error", (err) =>{
+                        SurfaceLevelExceptionHandler.handle("Error on dispatcher encountered: \ndiscord.js dispatcher says: " + err.message);
+                        this.handleDispatcherError();
                     });
                     return;
             }
@@ -152,6 +163,20 @@ export class MusicPlayer implements IMusicPlayer {
     private removeAnnounceMessage(){
         if(!this._now_playing?._song_data.anounce_message?.deleted){
             this._now_playing?._song_data.anounce_message?.delete();
+        }
+    }
+    private handleDispatcherError(){
+        this._player_status = MusicPlayerStatus.LOCKED;
+        if(this._now_playing?._next != undefined && this._repeat){
+            this._prevent_worker = true;
+            this.removeAnnounceMessage();
+            this._now_playing?._song_data.anounce_message?.channel.send(HanakoSpeech.DISPATCHER_ERROR_WITH_NEXT);
+            this._now_playing = this._now_playing._next;
+            this._player_status = MusicPlayerStatus.READY;
+        }
+        else{
+            this._now_playing?._song_data.anounce_message?.channel.send(HanakoSpeech.DISPATCHER_ERROR_STOP);
+            this.stopPlayer();
         }
     }
 }

@@ -23,4 +23,7 @@ export class HanakoSpeech {
     public static CANNOT_GO_BACK_FURTHER : string = "Sumimasen. The current song is the first song in the queue therefore I cannot fullfil the request. Is there anything else you would like to request?.";
     public static NO_SONG_TO_PAUSE : string = "Ano.. sumimasen, there no song I can pause at the moment. Is there anything else you would like to request?.";
     public static NO_SONG_TO_RESUME : string = "Ano.. sumimasen, there no song that is on pause at the moment. Is there anything else you would like to request?.";
+    public static DISPATCHER_ERROR_WITH_NEXT : string = "Sumimasen. I skipped the song as I unable to play the song. (T-T)";
+    public static DISPATCHER_ERROR_STOP : string = "Sumimasen. I stopped the player as I unable to play the last song in queue. (T-T)";
+
 }

@@ -54,7 +54,7 @@ export class Hanako {
                 }
             }
             catch (ex) {
-                SurfaceLevelExceptionHandler.writeToFile(ex);
+                SurfaceLevelExceptionHandler.handle(ex);
             }
         });
 
