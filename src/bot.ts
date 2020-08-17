@@ -1,15 +1,15 @@
-import { Client, Message } from "discord.js";
+import { Client, Message, User } from "discord.js";
 import { inject, injectable } from "inversify";
 import { TYPES } from "./types";
 import { TheWeebsDiscordID } from "./Models/Static/TheWeebsDiscordIDs";
 import { DanbooruCommandChain } from "./BotCommandChain/1stChain_Danbooru";
 import { CommandChain } from "./Models/Interfaces/CommandChain";
 import { SurfaceLevelExceptionHandler } from "./Objects/SurfaceLevelExceptionHandler";
+import { HanakoSpeech } from "./Models/Static/HanakoSpeech";
 @injectable()
 export class Hanako {
     private _client: Client;
     private readonly _token: string;
-    private _maintenance: boolean = false;
     private _prefix: string | undefined;
     constructor(
         @inject(TYPES.Client) client: Client,
@@ -28,7 +28,12 @@ export class Hanako {
 
         //set her default activity
         this._client.on("ready", () => {
-            this.setActivity("PLAYING", "with Okuhana Aiko");
+            try {
+                this.setActivity("PLAYING", "with Okuhana Aiko");
+            }
+            catch (ex) {
+                SurfaceLevelExceptionHandler.handle(ex);
+            }
         });
 
         //Readies herself and log to discord.
@@ -36,24 +41,32 @@ export class Hanako {
 
     }
     private lisenToMessage() {
-
         var prefix: string | undefined = this._prefix;
         this._client.on("message", async (msg: Message) => {
             try {
-                if (prefix !== undefined) {
-                    if (!msg.content.startsWith(prefix) || msg.author.bot) {
-                        return;
+                if (msg.channel.type === "dm") {
+                    //dm channel routine 
+                    msg.author.send("Sumimasen. I cant respond to DM message at the moment");
+                }
+                else if (msg.channel.type === "text") {
+                    //text channel routine 
+                    if (prefix !== undefined) {
+                        if (!msg.content.startsWith(prefix) || msg.author.bot) {
+                            return;
+                        }
+                        const args: Array<string> = msg.content.slice(prefix.length).split(/ +/);
+                        const command: string = args[0].toLowerCase();
+                        var CommandChain: CommandChain = new DanbooruCommandChain();
+                        CommandChain.executeChain(msg, command);
                     }
-                    else if (msg.author.id != TheWeebsDiscordID.bernabe && this._maintenance) {
-                        msg.reply("Sumimasen, Im currently on training with my master");
-                    }
-                    const args: Array<string> = msg.content.slice(prefix.length).split(/ +/);
-                    const command: string = args[0].toLowerCase();
-                    var CommandChain: CommandChain = new DanbooruCommandChain();
-                    CommandChain.executeChain(msg, command);
+                }
+                else {
+                    // news channel routine 
+                    msg.reply("Sumimasen. I cant respond to news/announce channel at the moment");
                 }
             }
             catch (ex) {
+                msg.reply(HanakoSpeech.ERROR_APOLOGY);
                 SurfaceLevelExceptionHandler.handle(ex);
             }
         });
@@ -78,5 +91,9 @@ export class Hanako {
             throw new Error("Unknown Activity type").stack;
         }
 
+    }
+    public async sendErrorAsPrivateMessage(discord_id: string, message: string) {
+        var user: User = await this._client.users.fetch(discord_id);
+        user.send(message, { files: ["./logs/exception_stack_trace.txt"] });
     }
 }

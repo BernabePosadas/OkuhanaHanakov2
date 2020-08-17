@@ -49,7 +49,6 @@ export class MusicPlayer implements IMusicPlayer {
         this._prevent_worker= false;
         if (this._now_playing != undefined) {
             if (this._now_playing?._song_data != undefined) {
-                
                 this._connection?.play(ytdl(this._now_playing._song_data.youtube_link, { filter: "audioonly" }), { bitrate: "auto" })
                     .on("start", () =>{
                         this._player_status = MusicPlayerStatus.PLAYING;
