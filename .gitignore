@@ -2,6 +2,9 @@
 /src/*.js
 /src/*/*.js
 /src/*/*/*.js
+!/src/static-pages/Scripts/*.js
 /src/*/*/*/*.js
+/src/*/*/*/*/*.js
+/src/*/*/*/*/*/*.js
 .env
 /logs/exception_stack_trace.txt
