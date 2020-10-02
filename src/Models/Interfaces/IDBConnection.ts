@@ -1,5 +1,4 @@
 interface IDBConnection{
-    connect() : boolean;
-    executeQuery() : boolean;
-    getData() : [];
+    executeQuery(query : string, data : []) : void;
+    getData() : any;
 }

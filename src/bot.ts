@@ -46,7 +46,7 @@ export class Hanako {
             try {
                 if (msg.channel.type === "dm") {
                     //dm channel routine 
-                    msg.author.send("Sumimasen. I cant respond to DM message at the moment");
+                    msg.author.send("Sumimasen. I cant respond to DMs at the moment");
                 }
                 else if (msg.channel.type === "text") {
                     //text channel routine 

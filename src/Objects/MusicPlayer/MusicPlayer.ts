@@ -1,7 +1,7 @@
 import { IMusicPlayer } from "../../Models/Interfaces/IMusicPlayer";
 import { IMusicPlaylist } from "../../Models/Interfaces/IMusicPlaylist";
 import { MusicPlayerStatus } from "../../Models/Static/MusicPlayerStatus";
-import { YoutubeMusicPlaylist } from "../../Models/YoutubeMusicPlaylist";
+import { YoutubeMusicPlaylist } from "../../Models/Implementations/YoutubeMusicPlaylist";
 import { MusicPlayItem } from "../../Models/Interfaces/MusicPlayItem";
 import { VoiceConnection, VoiceChannel } from "discord.js";
 import ytdl from "ytdl-core";

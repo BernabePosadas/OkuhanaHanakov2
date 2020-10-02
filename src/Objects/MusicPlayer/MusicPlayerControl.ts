@@ -180,6 +180,7 @@ export class MusicPlayerControl implements IMusicControl {
                 }
                 else {
                     msg.reply(HanakoSpeech.NOT_IN_SAME_VOICE_CHANNEL);
+                    return undefined;
                 }
             }
             else {

@@ -13,12 +13,12 @@
     "inversify": "^5.0.1",
     "minimist": "^1.2.5",
     "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
     "node-fetch": "^2.6.1",
     "node-gyp": "^7.0.0",
     "node-opus": "^0.3.3",
     "pixiv-api-client": "^0.22.0",
     "reflect-metadata": "^0.1.13",
-    "typescript": "^3.9.6",
     "ytdl-core": "^2.1.7"
   },
   "engines": {
@@ -28,10 +28,13 @@
     "start": "node ./src/index.js",
     "watch": "tsc -p tsconfig.json -w",
     "build": "tsc"
-
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "@types/jest": "^26.0.14",
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4",
+    "ts-jest": "^26.4.1",
+    "typescript": "^3.9.7"
   },
   "keywords": [],
   "author": "Bernabe Posadas Jr.",
