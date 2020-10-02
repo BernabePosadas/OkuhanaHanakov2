@@ -4,6 +4,7 @@ import { TYPES } from "./types";
 import { Hanako } from "./bot";
 import exp from "express";
 import logger from "morgan";
+import favicon from 'serve-favicon';
 const app = exp();
 import path from "path";
 
@@ -18,7 +19,9 @@ bot.start().then(() => {
 
   //region middleware
   app.use(logger("combined"));
+  app.use(favicon(path.join(__dirname, 'static-pages', 'favicon.ico'))); // website favicon
   app.use('/OkuhanaHanako', exp.static(path.join(__dirname, 'static-pages')));  //serve static page
+
   //endregion
 
   app.listen(port);
