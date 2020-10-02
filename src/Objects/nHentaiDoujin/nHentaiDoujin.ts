@@ -22,8 +22,7 @@ export class nHentaiDoujin{
         var codes = codeString.split(" ");
         
         if(codes.length > Number(process.env.NHENTAI_MAX_CODES)) {
-            // TODO: Replace message with a more character appropriate message
-            msg.channel.send("Too many codes");
+            msg.reply(HanakoSpeech.NHENTAI_MAX_QUERY_REACHED);
         }
         else {
             for(var code of codes) {
