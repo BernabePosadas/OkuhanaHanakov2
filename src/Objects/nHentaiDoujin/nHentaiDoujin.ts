@@ -24,6 +24,10 @@ export class nHentaiDoujin{
             return;
         }
         var codeString = msg.content.substring(12).toString().trim();
+        if(codeString.length === 0){
+            msg.reply(HanakoSpeech.EMPTY_ARGUMENT);
+            return;
+        }
         var codes = codeString.split(" ");
         
         if(codes.length > Number(process.env.NHENTAI_MAX_CODES)) {
