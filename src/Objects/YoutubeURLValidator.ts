@@ -1,8 +1,8 @@
 export function isYTURL(args : string) {
-    var expression = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/g
-    var regex = new RegExp(expression);
-    if (!args.match(regex)) {
-        return true;
-    }
-    return false;
+    var regex = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/.+$/g;
+    return regex.test(args);
+}
+export function isURL(args : string) {
+    var regex = /^((http|ftp|https):\/\/)?([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g;
+    return regex.test(args);
 }

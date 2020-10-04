@@ -9,7 +9,7 @@ import { IMusicControl } from "../../Models/Interfaces/IMusicPlayerControl";
 import { Message, VoiceChannel, Permissions, MessageEmbed } from "discord.js";
 import { IMusicPlayer } from "../../Models/Interfaces/IMusicPlayer";
 import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
-import { isYTURL } from "../YoutubeURLValidator";
+import { isYTURL, isURL } from "../YoutubeURLValidator";
 import { YoutubeDataAPI } from "../Data_Source/YoutubeDataAPI";
 import ytdl from "ytdl-core";
 import { MusicPlayer } from "./MusicPlayer";
@@ -25,7 +25,7 @@ import container from "../../inversify.config";
 export class MusicPlayerControl implements IMusicControl {
     public _player_instance: Map<string, MusicPlayer>;
     public _youtube_data_api: YoutubeDataAPI;
-    private _background_worker : any;
+    private _background_worker: any;
 
     constructor() {
         this._youtube_data_api = new YoutubeDataAPI();
@@ -35,65 +35,60 @@ export class MusicPlayerControl implements IMusicControl {
 
     public async addToQueue(msg: Message): Promise<void> {
         var args: string = msg.content.substring(6).toString().trim();
-        const voiceChannel: VoiceChannel | null | undefined = msg.member?.voice.channel;
-        if (voiceChannel === null) {
-            msg.reply(HanakoSpeech.NOT_IN_VOICE_CHANNEL);
+        if (args.length === 0) {
+            msg.reply(HanakoSpeech.EMPTY_ARGUMENT);
             return;
         }
-        if (msg.client.user !== null) {
-            const permissions: Readonly<Permissions> | null | undefined = voiceChannel?.permissionsFor(msg.client.user);
-            if (permissions === null || permissions === undefined) {
-                throw new Error("variable `permission` is null").stack;
-            }
-            else {
-                if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-                    msg.reply(HanakoSpeech.NO_PERMISSION_ON_VOICE_CHANNEL);
-                    return;
-                }
-                if (msg.guild !== null) {
-                    if (this.checkForExistingPlayerInstance(msg.guild.id)) {
-                        if (voiceChannel) {
-                            this.createNewPlayerInstance(voiceChannel, msg.guild.id);
-                        }
-                        else {
-                            throw new Error("voiceChannel is null").stack;
-                        }
-                    }
-                    if (isYTURL(args)) {
-                        this._youtube_data_api.searchFirstVideo(args);
-                    }
-                    var song_info = await ytdl.getInfo(args);
-                    var play_item: MusicPlayItem = {
-                        title: song_info.title,
-                        youtube_link: song_info.video_url,
-                        thumbnail: song_info.player_response.videoDetails.thumbnail.thumbnails[song_info.player_response.videoDetails.thumbnail.thumbnails.length - 1].url,
-                        requested_by: msg.member?.id,
-                        anounce_message: undefined,
-                        queued: false
-                    };
-                    var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
-                    if (player_instance !== undefined) {
-                        if (player_instance._player_status === MusicPlayerStatus.IDLE) {
-                            if(await player_instance.addToQueue(this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), play_item, msg))){
-                                await player_instance.playSong();
-                                this._background_worker = setInterval(musicPlayerControlWorker, 1000);
-                            }
-                            else{
-                                throw new Error(`Failed to start a player instance. Voice Channel ID :  ${voiceChannel?.id} `).stack;
-                            }
-                        }
-                        else {
-                            play_item.queued = true;
-                            player_instance.addToQueue(this.setPlayItemBanner("#000000", "Queued", play_item, msg));
-                        }
-                    }
-                    else {
-                        throw new Error("player_instance is undefined").stack;
-                    }
-                }
+        if(!this.handleVoiceConnection(msg)){
+            return;
+        }
+        if (isURL(args))   // args is a link
+        {
+            if (!isYTURL(args)) {
+                msg.reply(HanakoSpeech.INVALID_URL);
+                return;
             }
         }
-
+        else {  // args is not a link
+            if (!isYTURL(args)) {
+                args = await this._youtube_data_api.searchFirstVideo(args);
+            }
+        }
+        try {
+            var song_info = await ytdl.getInfo(args);
+            var play_item: MusicPlayItem = {
+                title: song_info.title,
+                youtube_link: song_info.video_url,
+                thumbnail: song_info.player_response.videoDetails.thumbnail.thumbnails[song_info.player_response.videoDetails.thumbnail.thumbnails.length - 1].url,
+                requested_by: msg.member?.id,
+                anounce_message: undefined,
+                queued: false
+            };
+            if(msg.guild !== null){
+                var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
+            }
+            if (player_instance !== undefined) {
+                if (player_instance._player_status === MusicPlayerStatus.IDLE) {
+                    if (await player_instance.addToQueue(this.setPlayItemBanner("#0099FF", "Now Playing " + this.checkIfRepeatIsOn(player_instance), play_item, msg))) {
+                        await player_instance.playSong();
+                        this._background_worker = setInterval(musicPlayerControlWorker, 1000);
+                    }
+                    else {
+                        throw new Error(`Failed to start a player instance.`).stack;
+                    }
+                }
+                else {
+                    play_item.queued = true;
+                    player_instance.addToQueue(this.setPlayItemBanner("#000000", "Queued", play_item, msg));
+                }
+            }
+            else {
+                throw new Error("player_instance is undefined").stack;
+            }
+        }
+        catch (ex) {
+            throw (ex as Error).stack;
+        }
     }
     public handleOtherMusicCommands(msg: Message, to_handle: string) {
         if (msg.guild !== null) {
@@ -171,6 +166,36 @@ export class MusicPlayerControl implements IMusicControl {
         }
         throw new Error("msg is undefined").stack;
     }
+    private handleVoiceConnection(msg : Message){
+        const voiceChannel: VoiceChannel | null | undefined = msg.member?.voice.channel;
+        if (voiceChannel === null) {
+            msg.reply(HanakoSpeech.NOT_IN_VOICE_CHANNEL);
+            return false;
+        }
+        if (msg.client.user !== null) {
+            const permissions: Readonly<Permissions> | null | undefined = voiceChannel?.permissionsFor(msg.client.user);
+            if (permissions === null || permissions === undefined) {
+                throw new Error("variable `permission` is null").stack;
+            }
+            else {
+                if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
+                    msg.reply(HanakoSpeech.NO_PERMISSION_ON_VOICE_CHANNEL);
+                    return false;
+                }
+                if (msg.guild !== null) {
+                    if (this.checkForExistingPlayerInstance(msg.guild.id)) {
+                        if (voiceChannel) {
+                            this.createNewPlayerInstance(voiceChannel, msg.guild.id);
+                        }
+                        else {
+                            throw new Error("voiceChannel is null").stack;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
     private playerCommonValidationFlow(msg: Message): IMusicPlayer | undefined {
         if (msg.guild !== null) {
             var player_instance: IMusicPlayer | undefined = this._player_instance.get(msg.guild.id);
@@ -201,7 +226,7 @@ export class MusicPlayerControl implements IMusicControl {
     //this is used for scheduled run task for every 1s. does not start immediately only when there is music player instance
     public async worker() {
         if (this._player_instance !== undefined) {
-            if(this._player_instance.size === 0){
+            if (this._player_instance.size === 0) {
                 clearInterval(this._background_worker);
                 return;
             }

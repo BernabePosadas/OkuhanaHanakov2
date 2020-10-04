@@ -26,5 +26,7 @@ export class HanakoSpeech {
     public static DISPATCHER_ERROR_WITH_NEXT : string = "Sumimasen. I skipped the song as I'm unable to play the song. (T-T)";
     public static DISPATCHER_ERROR_STOP : string = "Sumimasen. I stopped the player as I'm unable to play the last song in queue. (T-T)";
     public static ERROR_APOLOGY : string = "Sumimasen. I'm unable to execute the requested command. I let my master know. Please forgive me (T-T)";
-    public static NHENTAI_MAX_QUERY_REACHED : string = "Sumimasen. To avoid HTTP request spam to nhentai.net, master decided to limit the query up to " + process.env.NHENTAI_MAX_CODES + " per request. Please try again with fewer codes (^-^)";
+    public static NHENTAI_MAX_QUERY_REACHED : string = "Sumimasen. To avoid HTTP request spam to nhentai.net, master decided to limit the query up to " + process.env.NHENTAI_MAX_CODES + " code(s) per request. Please try again with fewer codes (^-^)";
+    public static EMPTY_ARGUMENT : string = "Sumimasen. I cant process your request due to empty argument/query. Please type "+ process.env.COMMAND_PREFIX + "help to learn how to use the bot commands";
+    public static INVALID_URL : string = "Sumimasen. The URL provided is not a valid youtube URL. Please try again with a valid URL (^-^)";
 }
