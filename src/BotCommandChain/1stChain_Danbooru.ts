@@ -11,11 +11,18 @@ import { Bow } from "../Objects/DanbooruImageRandomizer/Bow";
 import { nHentaiCommandChain } from "./2ndChain_nHentai";
 import container from "../inversify.config";
 import { TYPES } from "../types";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class DanbooruCommandChain implements CommandChain{
     private _bow : Bow;
-    constructor(){
-       this._bow = container.get<Bow>(TYPES.Bow);
+    private _nextCommandChain : CommandChain;
+    constructor(
+        @inject(TYPES.Bow) bow : Bow,
+        @inject(TYPES.NHentai_CommandChain) next : CommandChain
+    ){
+       this._bow = bow;
+       this._nextCommandChain = next;
     } 
     public executeChain(msg : Message, command : string){
         switch (command) { 
@@ -41,8 +48,7 @@ export class DanbooruCommandChain implements CommandChain{
                 this._bow.doGenericDanbooruImageSearch(msg, "safebooru");
                 break;
             default:
-                var CommandChain2nd : CommandChain = new nHentaiCommandChain();
-                CommandChain2nd.executeChain(msg, command);
+                this._nextCommandChain.executeChain(msg, command);
                 break;
         }
     }

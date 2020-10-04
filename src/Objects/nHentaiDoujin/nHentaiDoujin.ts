@@ -4,15 +4,20 @@ import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
 import { checkIfR18 } from "../R18ChannelValidator";
 import container from "../../inversify.config";
 import { TYPES } from "../../types";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class nHentaiDoujin{
     private _nhentai : nHentai;
     private _doujin : any;
     private _ext : string = "";
     private _command_prefix : string | undefined;
-    constructor(){
-        this._nhentai = new nHentai();
-        this._command_prefix = container.get(TYPES.Command_Prefix);
+    constructor(
+        @inject(TYPES.Command_Prefix) command_prefix : string,
+        @inject(TYPES.NHentai_Data) nHentai_Data : nHentai
+    ){
+        this._nhentai = nHentai_Data;
+        this._command_prefix = command_prefix;
     }
     public async searchAndServeDoujin(msg : Message, tagOnly : boolean){
         if(!checkIfR18(msg)){
