@@ -25,7 +25,7 @@ describe("BotMiscCommandChain Unit Test", () => {
     describe("executeChain method", () => {
         it("When method is called with command 'help', Should call MiscCommand.viewAvailCommands() once", () => {
             // Arrange
-            let command = 'help';
+            let command = "help";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -36,7 +36,7 @@ describe("BotMiscCommandChain Unit Test", () => {
 
         it("When method is called with invalid command, Should call Message.reply() once", () => {
             // Arrange
-            let command = '';
+            let command = "";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);

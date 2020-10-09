@@ -29,7 +29,7 @@ describe("nHentaiCommandChain Unit Tests", () => {
     describe("executeChain method", () => {
         it("When method is called with command 'launchnuke', Should call nHentaiDoujin.searchAndServeDoujin() once", () => {
             // Arrange
-            let command = 'launchnuke';
+            let command = "launchnuke";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -40,7 +40,7 @@ describe("nHentaiCommandChain Unit Tests", () => {
         
         it("When method is called with command 'doujintags', Should call nHentaiDoujin.searchAndServeDoujin() once", () => {
             // Arrange
-            let command = 'doujintags';
+            let command = "doujintags";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -51,7 +51,7 @@ describe("nHentaiCommandChain Unit Tests", () => {
 
         it("When method is called with invalid command, Should call CommandChain.executeChain() once", () => {
             // Arrange
-            let command = '';
+            let command = "";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);

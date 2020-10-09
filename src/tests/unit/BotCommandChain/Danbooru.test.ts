@@ -31,7 +31,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
     describe("executeChain method", () => {
         it("When method is called with command 'killmark', Should call Bow.shootMark() once", () => {
             // Arrange
-            let command = 'killmark';
+            let command = "killmark";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -42,7 +42,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
 
         it("When method is called with command 'killmaster', Should call Bow.shootBernabe() once", () => {
             // Arrange
-            let command = 'killmaster';
+            let command = "killmaster";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -53,7 +53,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
         
         it("When method is called with command 'killivan', Should call Bow.shootIvan() once", () => {
             // Arrange
-            let command = 'killivan';
+            let command = "killivan";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -64,7 +64,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
         
         it("When method is called with command 'omakaseshot', Should call Bow.omakaseShoot() once", () => {
             // Arrange
-            let command = 'omakaseshot';
+            let command = "omakaseshot";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -75,7 +75,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
 
         it("When method is called with command 'ougi', Should call Bow.useOugi() once", () => {
             // Arrange
-            let command = 'ougi';
+            let command = "ougi";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -86,7 +86,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
 
         it("When method is called with command 'danbooru', Should call Bow.doGenericDanbooruImageSearch() once", () => {
             // Arrange
-            let command = 'danbooru';
+            let command = "danbooru";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -97,7 +97,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
         
         it("When method is called with command 'safebooru', Should call Bow.doGenericDanbooruImageSearch() once", () => {
             // Arrange
-            let command = 'safebooru';
+            let command = "safebooru";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
@@ -108,7 +108,7 @@ describe("DanbooruCommandChain Unit Tests", () => {
 
         it("When method is called with invalid command, Should call CommandChain.executeChain() once", () => {
             // Arrange
-            let command = '';
+            let command = "";
 
             // Act
             sut.executeChain(instanceMockedMessage, command);
