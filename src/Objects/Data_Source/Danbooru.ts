@@ -1,5 +1,4 @@
-import { injectable, inject } from "inversify";
-import { TYPES } from "../../types";
+import { injectable } from "inversify";
 import fetch from "node-fetch";
 import querystring from "querystring";
 import { DanbooruPost } from "../../Models/Interfaces/DanbooruPost";
@@ -9,10 +8,8 @@ import { checkError } from "./../HTTPErrorChecker";
 export class Danbooru {
     public _aunth_header : string;
     constructor(
-        @inject(TYPES.Danbooru_Username) username: string,
-        @inject(TYPES.Danbooru_Key) api_key: string
     ) {
-       this._aunth_header = username + ":" + api_key;
+       this._aunth_header = process.env.USER_NAME + ":" + process.env.DANBOORU_KEY;
     }
 
     public async fetchRandomImage(candidate: string, search_from: string): Promise<DanbooruPost> {
