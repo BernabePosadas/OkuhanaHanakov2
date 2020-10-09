@@ -4,12 +4,18 @@ import { MusicPlayerControl } from "../Objects/MusicPlayer/MusicPlayerControl";
 import { IMusicControl } from "../Models/Interfaces/IMusicPlayerControl";
 import container from "../inversify.config";
 import { TYPES } from "../types";
-import { BotMiscCommandChain } from "./4thChain_Misc";
+import { inject, injectable } from "inversify";
 
+@injectable()
 export class MusicPlayerCommandChain implements CommandChain{
     private _music_player_control : IMusicControl;
-    constructor(){
-        this._music_player_control = container.get<MusicPlayerControl>(TYPES.MusicPlayerControl);
+    private _next_command_chain : CommandChain;
+    constructor(
+        @inject(TYPES.MusicPlayerControl) music_player_control : IMusicControl,
+        @inject(TYPES.Misc_CommandChain) nextCommandChain : CommandChain
+    ){
+        this._music_player_control = music_player_control;
+        this._next_command_chain = nextCommandChain;
     }
     public executeChain(msg : Message, command : string){
         switch (command) { 
@@ -35,8 +41,7 @@ export class MusicPlayerCommandChain implements CommandChain{
                 this._music_player_control.handleOtherMusicCommands(msg, "repeat");
                 break;
             default:
-                var CommandChain3rd : CommandChain = new BotMiscCommandChain();
-                CommandChain3rd.executeChain(msg, command);
+                this._next_command_chain.executeChain(msg, command);
                 break;
         }
     }

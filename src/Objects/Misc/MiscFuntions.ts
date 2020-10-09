@@ -1,6 +1,8 @@
 import { Message, MessageEmbed } from "discord.js";
+import { injectable } from "inversify";
 import { TheWeebsDiscordID } from "../../Models/Static/TheWeebsDiscordIDs";
 
+@injectable()
 export class MiscCommand {
  public viewAvailCommands(msg : Message) {
     var DanbooruImageCommandsDefault = `\`!danbooru <query>\` random search images from danbooru given the tag \`<query>\` (R18 channels only)\n\`!safebooru <query>\` random search images from safebooru given the tag \`<query>\` (for non nsfw channel)`;

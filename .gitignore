@@ -1,7 +1,7 @@
 /node_modules
-/src/*.js
-/src/*/*.js
-/src/*/*/*.js
-/src/*/*/*/*.js
+/bin
+/.nyc_output
+/coverage
 .env
 /logs/exception_stack_trace.txt
+

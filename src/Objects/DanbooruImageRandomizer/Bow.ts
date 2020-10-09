@@ -66,7 +66,11 @@ export class Bow {
     public async doGenericDanbooruImageSearch(msg: Message, searchFrom: string) {
         const args: Array<string> = msg.content.slice("!".length).split(/ +/);
         args.shift();
-        if (args.length > 2) {
+        if(args.length === 0){
+            msg.reply(HanakoSpeech.EMPTY_ARGUMENT);
+            return;
+        }
+        else if (args.length > 2) {
             msg.reply(HanakoSpeech.MORE_THAN_TAG_LIMIT_SPEECH);
             return;
         }

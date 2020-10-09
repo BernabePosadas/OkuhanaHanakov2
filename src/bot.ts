@@ -11,15 +11,17 @@ export class Hanako {
     private _client: Client;
     private readonly _token: string;
     private _prefix: string | undefined;
+    private _danbooru_CommandChain : DanbooruCommandChain;
     constructor(
         @inject(TYPES.Client) client: Client,
         @inject(TYPES.Token) token: string,
-        @inject(TYPES.Command_Prefix) prefix: string | undefined
-
+        @inject(TYPES.Command_Prefix) prefix: string | undefined,
+        @inject(TYPES.Danbooru_CommandChain) danbooru_CommandChain : DanbooruCommandChain
     ) {
         this._client = client;
         this._token = token;
         this._prefix = prefix;
+        this._danbooru_CommandChain = danbooru_CommandChain;
     }
     public start(): Promise<string> {
 
@@ -56,8 +58,7 @@ export class Hanako {
                         }
                         const args: Array<string> = msg.content.slice(prefix.length).split(/ +/);
                         const command: string = args[0].toLowerCase();
-                        var CommandChain: CommandChain = new DanbooruCommandChain();
-                        CommandChain.executeChain(msg, command);
+                        this._danbooru_CommandChain.executeChain(msg, command);
                     }
                 }
                 else {
