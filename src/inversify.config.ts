@@ -15,6 +15,8 @@ import { MiscCommand } from "./Objects/Misc/MiscFuntions";
 import { BotMiscCommandChain } from "./BotCommandChain/4thChain_Misc";
 import { MusicPlayerCommandChain } from "./BotCommandChain/3ndChain_MusicPlayer";
 import { CommandChain } from "./Models/Interfaces/CommandChain";
+import { MySQLDBConnection } from "./Models/Implementations/DB/MySQLDBConnection";
+import { DBSchemaInitMigrationTool } from "./Objects/Misc/DBSchemaInitMigrationTool";
 
 let container = new Container();
 
@@ -31,6 +33,8 @@ container.bind<string | undefined>(TYPES.Command_Prefix).toConstantValue(process
 container.bind<nHentai>(TYPES.NHentai_Data).to(nHentai).inTransientScope();
 container.bind<nHentaiDoujin>(TYPES.NHentai_Doujin).to(nHentaiDoujin);
 container.bind<MiscCommand>(TYPES.Misc_Command).to(MiscCommand);
+container.bind<MySQLDBConnection>(TYPES.Mysql_Object).to(MySQLDBConnection).inSingletonScope();
+container.bind<DBSchemaInitMigrationTool>(TYPES.Migration_tool).to(DBSchemaInitMigrationTool).inSingletonScope();
 
 container.bind<CommandChain>(TYPES.NHentai_CommandChain).to(nHentaiCommandChain);
 container.bind<CommandChain>(TYPES.Danbooru_CommandChain).to(DanbooruCommandChain);

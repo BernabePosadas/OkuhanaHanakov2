@@ -1,7 +1,7 @@
 import { Danbooru } from "./../Data_Source/Danbooru";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types";
-import { Shuffler } from "./../Shuffle";
+import { Shuffler } from "./Shuffle";
 import { DanbooruPost } from "../../Models/Interfaces/DanbooruPost";
 
 @injectable()

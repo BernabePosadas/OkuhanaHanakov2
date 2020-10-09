@@ -1,12 +1,12 @@
 import { IMusicPlayer } from "../../Models/Interfaces/IMusicPlayer";
 import { IMusicPlaylist } from "../../Models/Interfaces/IMusicPlaylist";
 import { MusicPlayerStatus } from "../../Models/Static/MusicPlayerStatus";
-import { YoutubeMusicPlaylist } from "../../Models/Implementations/YoutubeMusicPlaylist";
+import { YoutubeMusicPlaylist } from "./YoutubeMusicPlaylist";
 import { MusicPlayItem } from "../../Models/Interfaces/MusicPlayItem";
 import { VoiceConnection, VoiceChannel } from "discord.js";
 import ytdl from "ytdl-core";
 import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
-import { SurfaceLevelExceptionHandler } from "../SurfaceLevelExceptionHandler";
+import { SurfaceLevelExceptionHandler } from "../Validators/SurfaceLevelExceptionHandler";
 
 
 export class MusicPlayer implements IMusicPlayer {
@@ -96,7 +96,6 @@ export class MusicPlayer implements IMusicPlayer {
                 this._player_status = MusicPlayerStatus.TERMINATING;
                 this._connection?.dispatcher.end();
             }
-            this._player_status = MusicPlayerStatus.IDLE;
             this.removeAnnounceMessage();
             while (this._now_playing?._next !== undefined) {
                 this._now_playing = this._now_playing._next;
@@ -106,6 +105,7 @@ export class MusicPlayer implements IMusicPlayer {
             this._now_playing = undefined;
             this._remove_instance = true;
             this._voice_channel?.leave();
+            this._player_status = MusicPlayerStatus.IDLE;
             return true;
         }
         return false;

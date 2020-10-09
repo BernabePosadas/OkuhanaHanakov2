@@ -17,4 +17,6 @@ export const TYPES = {
     Music_CommandChain : Symbol.for("Music_CommandChain"),
     Misc_Command : Symbol.for("Misc_Command"),
     Misc_CommandChain : Symbol.for("Misc_CommandChain"),
+    Mysql_Object : Symbol.for("Mysql_Object"),
+    Migration_tool : Symbol.for("Migration_tool")
 };

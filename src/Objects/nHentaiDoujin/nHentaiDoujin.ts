@@ -1,7 +1,7 @@
 import { nHentai } from "../Data_Source/nHentai";
 import { Message, MessageEmbed } from "discord.js";
 import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
-import { checkIfR18 } from "../R18ChannelValidator";
+import { checkIfR18 } from "../Validators/R18ChannelValidator";
 import container from "../../inversify.config";
 import { TYPES } from "../../types";
 import { inject, injectable } from "inversify";

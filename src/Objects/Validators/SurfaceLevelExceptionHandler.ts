@@ -1,8 +1,8 @@
 import fs from 'fs';
-import container from "./../inversify.config";
-import {TYPES} from "./../types";
-import {Hanako} from "./../bot";
-import {TheWeebsDiscordID} from "./../Models/Static/TheWeebsDiscordIDs";
+import container from "../../inversify.config";
+import {TYPES} from "../../types";
+import {Hanako} from "../../bot";
+import {TheWeebsDiscordID} from "../../Models/Static/TheWeebsDiscordIDs";
 
 export class SurfaceLevelExceptionHandler{
     public static handle(exception : string){

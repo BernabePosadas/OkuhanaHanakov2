@@ -3,7 +3,7 @@ import { TYPES } from "../../types";
 import fetch from "node-fetch";
 import querystring from "querystring";
 import { DanbooruPost } from "../../Models/Interfaces/DanbooruPost";
-import { checkError } from "./../HTTPErrorChecker";
+import { checkError } from "../Validators/HTTPErrorChecker";
 
 @injectable()
 export class Danbooru {

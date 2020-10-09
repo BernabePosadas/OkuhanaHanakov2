@@ -9,7 +9,7 @@ import { IMusicControl } from "../../Models/Interfaces/IMusicPlayerControl";
 import { Message, VoiceChannel, Permissions, MessageEmbed } from "discord.js";
 import { IMusicPlayer } from "../../Models/Interfaces/IMusicPlayer";
 import { HanakoSpeech } from "../../Models/Static/HanakoSpeech";
-import { isYTURL, isURL } from "../YoutubeURLValidator";
+import { isYTURL, isURL } from "./YoutubeURLValidator";
 import { YoutubeDataAPI } from "../Data_Source/YoutubeDataAPI";
 import ytdl from "ytdl-core";
 import { MusicPlayer } from "./MusicPlayer";

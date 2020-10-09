@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import querystring from "querystring";
-import { checkError } from "../HTTPErrorChecker";
+import { checkError } from "../Validators/HTTPErrorChecker";
 
 
 export class YoutubeDataAPI{

@@ -1,5 +1,5 @@
-import { IMusicPlaylist } from "../Interfaces/IMusicPlaylist";
-import { MusicPlayItem } from "../Interfaces/MusicPlayItem";
+import { IMusicPlaylist } from "../../Models/Interfaces/IMusicPlaylist";
+import { MusicPlayItem } from "../../Models/Interfaces/MusicPlayItem";
 
 export class YoutubeMusicPlaylist implements IMusicPlaylist{
     public _previous: IMusicPlaylist | undefined;

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import fetch from "node-fetch";
-import { checkError } from "./../HTTPErrorChecker";
+import { checkError } from "../Validators/HTTPErrorChecker";
 
 @injectable()
 export class nHentai {
