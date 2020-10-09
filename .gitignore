@@ -4,4 +4,5 @@
 /coverage
 .env
 /logs/exception_stack_trace.txt
+package-lock.json
 
