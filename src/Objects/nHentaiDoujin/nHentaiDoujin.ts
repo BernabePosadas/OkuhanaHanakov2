@@ -36,7 +36,7 @@ export class nHentaiDoujin{
         else {
             for(var code of codes) {
                 this._doujin = await this._nhentai.fetchDoujin(code);
-                if (this._doujin === undefined) {
+                if (!this._doujin) {
                     msg.reply(HanakoSpeech.NO_DOUJIN_FOUND_SPEECH);
                 }
                 else {
