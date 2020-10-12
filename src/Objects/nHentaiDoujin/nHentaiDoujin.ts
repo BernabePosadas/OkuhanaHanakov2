@@ -36,27 +36,29 @@ export class nHentaiDoujin{
         else {
             for(var code of codes) {
                 this._doujin = await this._nhentai.fetchDoujin(code);
-                if (this._doujin === undefined) {
+                if (!this._doujin) {
                     msg.reply(HanakoSpeech.NO_DOUJIN_FOUND_SPEECH);
                 }
-                if (this._doujin.images.cover.t == "j") this._ext = "jpg";
-                else this._ext = "png";
-                if (tagOnly) {
-                    this.displayAllTags(msg);
-                }
                 else {
-                    var DetailMessageEmbed = new MessageEmbed()
-                        .setColor("#FFC0CB")
-                        .setTitle(this._doujin.title.english)
-                        .setImage(`https://t.nhentai.net/galleries/${this._doujin.media_id}/cover.${this._ext}`)
-                        .addField("Tags: ", this.displayTags("tag"))
-                        .addField("Artist: ", this.displayTags("artist"))
-                        .addField("Group: ", this.displayTags("group"))
-                        .addField("Character: ", this.displayTags("character"))
-                        .addField("Parody: ", this.displayTags("parody"))
-                        .addField("Language: ", this.displayTags("language"))
-                        .addField(`${this._doujin.images.pages.length} pages`, `[View on nHentai](https://nhentai.net/g/${this._doujin.id})`, true);
-                    msg.channel.send(DetailMessageEmbed);
+                    if (this._doujin.images.cover.t == "j") this._ext = "jpg";
+                    else this._ext = "png";
+                    if (tagOnly) {
+                        this.displayAllTags(msg);
+                    }
+                    else {
+                        var DetailMessageEmbed = new MessageEmbed()
+                            .setColor("#FFC0CB")
+                            .setTitle(this._doujin.title.english)
+                            .setImage(`https://t.nhentai.net/galleries/${this._doujin.media_id}/cover.${this._ext}`)
+                            .addField("Tags: ", this.displayTags("tag"))
+                            .addField("Artist: ", this.displayTags("artist"))
+                            .addField("Group: ", this.displayTags("group"))
+                            .addField("Character: ", this.displayTags("character"))
+                            .addField("Parody: ", this.displayTags("parody"))
+                            .addField("Language: ", this.displayTags("language"))
+                            .addField(`${this._doujin.images.pages.length} pages`, `[View on nHentai](https://nhentai.net/g/${this._doujin.id})`, true);
+                        msg.channel.send(DetailMessageEmbed);
+                    }
                 }
             }
         }
